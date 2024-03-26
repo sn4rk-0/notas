@@ -50,7 +50,8 @@ body {
 	margin: 0;
 	padding: 0;
 	font-family: 'Gelasio', 'Nanum Myeongjo', serif;
-	color: #2c3e50;
+	color: #ffffff;/* ---------- */
+	background-color: #303030;/* ---------- */
 }
 
 a {
@@ -60,7 +61,7 @@ a {
 }
 
 a:hover {
-	text-decoration: underline;
+	text-decoration: none;/* ---------- */
 }
 
 pre {
@@ -99,7 +100,6 @@ code {
 	padding: 15px;
 	z-index: 1;
 	background-color: #222;
-	color: #fff;
 }
 
 .sidebar-item {
@@ -114,38 +114,43 @@ code {
 .sidebar-brand > a {
 	font-size: 300%;
 	font-family: 'Gelasio';
-	color: #fff;
+	color: #48ff00;
 }
 
 .lead {
 	font-size: 120%;
-	color: #aaa;
+	color: rgba(255, 192, 203, 50%);
 }
 
 .sidebar-header {
-	margin-bottom: 50px;
+	margin-bottom: 45px;/* ---------- */
 }
 
 .sidebar-nav {
-	margin-top: 20px;
+	margin-top: 5px;/* ---------- */
 }
 
 .nav-title {
-	font-size: 100%;
+	font-size: 110%;/* ---------- */
 	font-family: "Noto Sans";
 	text-transform: uppercase;
 	border-bottom: 1px solid gray;
 	margin-bottom: 5px;
+	color: rgb(0, 151, 221);/* ---------- */
+	font-weight: bold;/* ---------- */
 }
 
 a.nav-item {
-	font-size: 120%;
+	font-size: 100%;/* ---------- */
 	font-family: "Noto Sans";
 	text-transform: capitalize;
-	color: #aaa;
+	color: white;/* ---------- */
 }
 
-a.nav-item:hover { color: #777; }
+a.nav-item:hover { 
+	color: rgb(255, 220, 65); /* ---------- */
+	text-decoration: none;/* ---------- */
+}
 
 .badge { font-size: 70%; }
 .badge::before { content: "("; }
@@ -157,7 +162,7 @@ a.nav-item:hover { color: #777; }
 .post-link {
 	margin-left: 10px;
 	font-size: 110%;
-	color: #333;
+	color: rgb(50, 225, 118);/* ---------- */
 }
 
 #contact-list li .fa,
@@ -205,7 +210,7 @@ article .share .gplus:hover {
 article {
 	padding: 0 5% 0;
 	font-size: 17px;
-	margin-bottom: 100px;
+	margin-bottom: 30px;/* ---------- */
 	line-height: 1.9;
 }
 
@@ -251,7 +256,7 @@ article.home h4 a:hover {
 }
 
 header.post-header {
-	padding: 50px 0px 10px 0px;
+	padding: 40px 0px 5px 0px;/* ---------- */
 	margin-bottom: 30px;
 	border-bottom: 1px solid #ccc;
 	text-align: center;
@@ -263,13 +268,13 @@ header.home {
 
 .post-title {
 	font-size: 1.5em;
-	color: #111;
+	color: rgb(255, 236, 65);/* ---------- */
 	font-weight: bold;
 }
 
 .post-date {
 	text-transform: uppercase;
-	color: #555;
+	color: #858585;/* ---------- */
 	letter-spacing: 1px;
 	font-size: 0.8em;
 	display: inline-block;
@@ -321,6 +326,7 @@ footer {
 
 	.sidebar-nav {
 		margin: 0px;
+		padding: 0 2%;/* ---------- */
 	}
 
 	.sidebar-item {
