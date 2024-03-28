@@ -136,7 +136,7 @@ code {
 	text-transform: uppercase;
 	border-bottom: 1px solid gray;
 	margin-bottom: 5px;
-	color: rgb(0, 151, 221);/* ---------- */
+	color: #6783ff;/* ---------- */
 	font-weight: bold;/* ---------- */
 }
 
@@ -157,6 +157,7 @@ a.nav-item:hover {
 .badge::after { content: ")"; }
 
 .post-list > li {
+	color: rgb(255, 220, 65);/* ---------- */
 }
 
 .post-link {
@@ -238,7 +239,7 @@ article h4,
 article h5,
 article h6 {
 	font-family: "Roboto", "Nanum Gothic";
-	color: #333;
+	color: #fd7272;/* ---------- */
   	margin-bottom: 0;
 }
 
@@ -270,6 +271,7 @@ header.home {
 	font-size: 1.5em;
 	color: rgb(255, 236, 65);/* ---------- */
 	font-weight: bold;
+	text-align: center;
 }
 
 .post-date {
