@@ -50,7 +50,7 @@ body {
 	margin: 0;
 	padding: 0;
 	font-family: 'Gelasio', 'Nanum Myeongjo', serif;
-	color: #ffffff;/* ---------- */
+	color: #e2e2e2bd;/* ---------- */
 	background-color: #303030;/* ---------- */
 }
 
@@ -233,8 +233,6 @@ p {
 }
 
 article h1,
-article h2,
-article h3,
 article h4,
 article h5,
 article h6 {
@@ -269,7 +267,7 @@ header.home {
 
 .post-title {
 	font-size: 1.5em;
-	color: rgb(255, 236, 65);/* ---------- */
+	color: var(--orange);/* ---------- */
 	font-weight: bold;
 	text-align: center;
 }
@@ -345,3 +343,16 @@ footer {
 		display: none;
 	}
 }
+
+/* more styles */
+table{width: 100%;}
+th{color: #00ACEE; font-size: 20px;}
+th,td {border-bottom: 1px solid rgba(128, 128, 128,10%) ;}
+table td:nth-child(1) {
+    color: rgba(199, 154, 154, 0.897); 
+}
+
+strong{color: hsl(9, 100%, 73%);}
+
+h2 {color: #e7db70;}
+h3 {color: #68d377;}
