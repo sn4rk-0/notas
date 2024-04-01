@@ -232,10 +232,7 @@ p {
   margin-bottom: 0;
 }
 
-article h1,
-article h4,
-article h5,
-article h6 {
+article h1{
 	font-family: "Roboto", "Nanum Gothic";
 	color: #fd7272;/* ---------- */
   	margin-bottom: 0;
@@ -356,3 +353,6 @@ strong{color: hsl(9, 100%, 73%);}
 
 h2 {color: #e7db70;}
 h3 {color: #68d377;}
+h4 {color: #b870e2;}
+h5 {color: #74cec2;}
+h6 {color: #6896d3;}

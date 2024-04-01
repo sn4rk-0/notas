@@ -1,0 +1,230 @@
+---
+layout: post
+title: Markdown Sintaxis
+date: 2024-04-01 15:10:23 +0900
+category: sample
+vm: obsidian
+---
+### 1) Formatos de texto 
+
+#### negrita  
+
+```
+    **texto negrita 1** 
+
+    __texto negrita 2__ 
+```
+**texto negrita 1** 
+
+**texto negrita 2** 
+
+#### cursiva  
+
+```
+    *texto cursiva 1*   
+
+    _texto cursiva 2_   
+```
+*texto cursiva 1*
+
+ _texto cursiva 2_
+
+#### negrita y cursiva 
+
+```
+    ***texto negrita y cursiva 1***     
+
+    __texto negrita y cursiva 2___
+```
+***texto negrita y cursiva 1***
+
+___texto negrita y cursiva 2___
+
+#### tachado
+
+```
+	~~tachado~~
+```
+~~tachado~~
+
+<br>
+
+### 2) Énfasis de textos 
+
+#### citas
+```
+    > esto es una cita
+```
+> esto es una cita
+
+#### Importante (_cuatro espacios al inicio_)
+```
+    Texto 
+    importante aquí.
+```
+    Texto 
+    importante aquí.
+
+<br>
+
+### 3) Regla o separador 
+
+#### con 3 guiones bajos / asteriscos / guiones
+```
+    ___
+
+    ***
+
+    ---
+```
+---
+
+<br>
+
+### 4) Listas
+
+#### Desordenadas
+
+```
+    - elemento 1
+    - elemento 2
+    
+    * elemento 1
+    * elemento 2
+    
+    + elemento 1
+    + elemento 2
+```
+- elemento 1
+- elemento 2
+
+* elemento 1
+* elemento 2
+
++ elemento 1
++ elemento 2
+
+#### Ordenadas
+
+```
+    1. elemento 1
+        1. subelemento
+        2. subelemento
+    2. elemento 2
+        1. subelemento
+        2. subelemento
+```
+1. elemento 1
+    1. subelemento
+    2. subelemento
+2. elemento 2
+    1. subelemento
+    2. subelemento
+
+<br>
+
+### 5) checkbox
+
+```
+    - [ ] item 1
+    - [x] item 2
+    - [ ] item 3
+```
+- [ ] item 1
+- [x] item 2
+- [ ] item 3
+
+<br>
+
+### 6) Escape caracteres especiales
+
+```
+    \*ya no es cursiva :(*
+
+    \> ya no es cita :(
+```
+\*ya no es cursiva :(*
+
+\> ya no es cita :(
+    
+<br>
+
+### 7) Etiquetas
+
+```
+    #hacking #básico
+```
+![etiquetas](/notas/public/img/obsidian/etiquetas.png)
+
+<br>
+
+### 8) Hipervínculos
+```
+    [Mi Github](https://github.com/username)
+
+    <correo@gmail.com>
+
+    [[ruta_archivo_local]]
+```
+[Mi Github](https://github.com/r1d3L-h4ck)
+
+<correo@gmail.com>
+
+[[ruta_archivo_local]]
+
+<br>
+
+### 9) Referencias
+
+```
+    mi github [^clave] ve a verlo.
+    [^clave]: E aqui mi git https://github.com/username
+```
+![etiquetas](/notas/public/img/obsidian/referencia1.png)
+![etiquetas](/notas/public/img/obsidian/referencia2.png)
+
+<br>
+
+### 10) Tablas
+
+```
+    | columna 1 | columna 2 | columna 3 |
+    |-----------|-----------|-----------|
+    | fila 1    | fila 1    | fila 1    |
+    | fila 2    | fila 2    | fila 2    |
+```
+![etiquetas](/notas/public/img/obsidian/table.png)
+
+<br>
+
+### 11) Bloque de código
+
+```
+    ```php
+        /* suma de dos numeros */
+        $numero1=2;
+        $numero2=3;
+        echo $numero1 + $numero2;
+    ```
+```
+
+```php
+        /* suma de dos numeros */
+        $numero1=2;
+        $numero2=3;
+        echo $numero1 + $numero2;
+```
+
+<br>
+
+### 12) Imágenes
+
+```
+    ![gato|190x150](hacking-tools.png "text respaldo: More tools hacking")
+
+    ![[unnamed.jpg|180x190]]
+```
+![etiquetas](/notas/public/img/obsidian/image1.png)
+![etiquetas](/notas/public/img/obsidian/image2.png)
+
+_próxima actualización de contenido ...._

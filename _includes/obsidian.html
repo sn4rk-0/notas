@@ -1,15 +1,15 @@
 <article class="post">
   <header class="post-header home">
-    <div class="post-title">Vulnyx Easy</div>
+    <div class="post-title">Toma de apuntes con Obsidian</div>
   </header>
 
   <div class="post-content">
-    próxima actualización de contenido ....
-    <!-- {%- if site.posts.size > 0 -%}
+    {%- if site.posts.size > 0 -%}
       <ul class="post-list">
         {%- for post in site.posts -%}
-          {% if post.vm == "vulnyx" %}
+          {% if post.vm == "obsidian" %}
             <li class="post-list-item">
+              <!-- {%- assign date_format = site.date_format | default: "%b %-d, %Y" -%} -->
               {%- assign date_format = "%Y/%m/%d" -%}
               <span class="post-date">{{ post.date | date: date_format }}</span>
               <a class="post-link" href="{{ post.url | relative_url }}">
@@ -20,7 +20,7 @@
           {%- if site.show_excerpts -%}{{ post.excerpt }}{%- endif -%}
         {%- endfor -%}
       </ul>
-    {%- endif -%} -->
+    {%- endif -%}
   </div>
 </article>
 </div>
