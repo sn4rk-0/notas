@@ -180,8 +180,8 @@ ___texto negrita y cursiva 2___
     mi github [^clave] ve a verlo.
     [^clave]: E aqui mi git https://github.com/username
 ```
-![etiquetas](/notas/public/img/obsidian/referencia1.png)
-![etiquetas](/notas/public/img/obsidian/referencia2.png)
+![referencia1](/notas/public/img/obsidian/referencia1.png)
+![referencia2](/notas/public/img/obsidian/referencia2.png)
 
 <br>
 
@@ -193,7 +193,7 @@ ___texto negrita y cursiva 2___
     | fila 1    | fila 1    | fila 1    |
     | fila 2    | fila 2    | fila 2    |
 ```
-![etiquetas](/notas/public/img/obsidian/table.png)
+![table](/notas/public/img/obsidian/table.png)
 
 <br>
 
@@ -224,7 +224,7 @@ ___texto negrita y cursiva 2___
 
     ![[unnamed.jpg|180x190]]
 ```
-![etiquetas](/notas/public/img/obsidian/image1.png)
-![etiquetas](/notas/public/img/obsidian/image2.png)
+![image1](/notas/public/img/obsidian/image1.png)
+![image2](/notas/public/img/obsidian/image2.png)
 
 _próxima actualización de contenido ...._

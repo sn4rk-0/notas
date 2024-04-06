@@ -1,9 +1,9 @@
 ---
 layout: post
-title: Comandos básicos Linux
+title: Comandos básicos
 date: 2024-03-28 16:28:23 +0900
 category: sample
-vm: comandos
+vm: linux
 ---
 |Comando |Función|
 |-|-|
