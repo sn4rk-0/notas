@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Markdown Sintaxis
-date: 2024-04-01 15:10:23 +0900
+date: 2024-04-01 15:10:23 
 category: sample
 vm: obsidian
 ---
@@ -47,7 +47,6 @@ ___texto negrita y cursiva 2___
 ```
 ~~tachado~~
 
-<br>
 
 ### 2) Énfasis de textos 
 
@@ -65,7 +64,6 @@ ___texto negrita y cursiva 2___
     Texto 
     importante aquí.
 
-<br>
 
 ### 3) Regla o separador 
 
@@ -79,7 +77,6 @@ ___texto negrita y cursiva 2___
 ```
 ---
 
-<br>
 
 ### 4) Listas
 
@@ -121,7 +118,6 @@ ___texto negrita y cursiva 2___
     1. subelemento
     2. subelemento
 
-<br>
 
 ### 5) checkbox
 
@@ -134,7 +130,6 @@ ___texto negrita y cursiva 2___
 - [x] item 2
 - [ ] item 3
 
-<br>
 
 ### 6) Escape caracteres especiales
 
@@ -147,7 +142,6 @@ ___texto negrita y cursiva 2___
 
 \> ya no es cita :(
     
-<br>
 
 ### 7) Etiquetas
 
@@ -156,7 +150,6 @@ ___texto negrita y cursiva 2___
 ```
 ![etiquetas](/notas/public/img/obsidian/etiquetas.png)
 
-<br>
 
 ### 8) Hipervínculos
 ```
@@ -172,7 +165,6 @@ ___texto negrita y cursiva 2___
 
 [[ruta_archivo_local]]
 
-<br>
 
 ### 9) Referencias
 
@@ -183,7 +175,6 @@ ___texto negrita y cursiva 2___
 ![referencia1](/notas/public/img/obsidian/referencia1.png)
 ![referencia2](/notas/public/img/obsidian/referencia2.png)
 
-<br>
 
 ### 10) Tablas
 
@@ -195,7 +186,6 @@ ___texto negrita y cursiva 2___
 ```
 ![table](/notas/public/img/obsidian/table.png)
 
-<br>
 
 ### 11) Bloque de código
 
@@ -215,7 +205,6 @@ ___texto negrita y cursiva 2___
         echo $numero1 + $numero2;
 ```
 
-<br>
 
 ### 12) Imágenes
 

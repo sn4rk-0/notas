@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Hacking Wifi
-date: 2024-04-06 12:24:23 +0900
+date: 2024-04-06 12:24:23 
 category: sample
 vm: linux
 ---

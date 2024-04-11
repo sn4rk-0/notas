@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Reparación de Móviles
-date: 2024-03-28 18:11:23 +0900
+date: 2024-03-28 18:11:23
 category: sample
 vm: movil
 ---

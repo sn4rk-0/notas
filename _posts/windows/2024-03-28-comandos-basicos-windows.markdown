@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Comandos Básicos Windows
-date: 2024-03-28 18:10:23 +0900
+date: 2024-03-28 18:10:23
 category: sample
 vm: windows
 ---

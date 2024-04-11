@@ -50,7 +50,7 @@ body {
 	margin: 0;
 	padding: 0;
 	font-family: 'Gelasio', 'Nanum Myeongjo', serif;
-	color: #e2e2e2bd;/* ---------- */
+	color: #e2e2e2af;/* ---------- */
 	background-color: #303030;/* ---------- */
 }
 
@@ -305,6 +305,7 @@ footer {
 	article {
 		font-size: 0.9em;
 		line-height: 1.5;
+		padding: 0 5% 0;
 	}
 
 	.content {
@@ -339,6 +340,7 @@ footer {
 		visibility: hidden;
 		display: none;
 	}
+	.highlighter-rouge{font-size: xx-small;}
 }
 
 /* more styles */
@@ -349,10 +351,27 @@ table td:nth-child(1) {
     color: rgba(199, 154, 154, 0.897); 
 }
 
+.log {
+	width:90%;
+	text-align:center
+}
+
 strong{color: hsl(9, 100%, 73%);}
 
 h2 {color: #e7db70;}
-h3 {color: #68d377;}
+h3 {color: #68d377; margin-top: 5%;}
 h4 {color: #b870e2;}
 h5 {color: #74cec2;}
 h6 {color: #6896d3;}
+
+.easy{color: #51c25be1;}
+.medium{color: #c2a851e1;}
+.hard{color: #c25151e1;}
+
+.highlighter-rouge{color: #a3a3a3ad;}
+
+.margin {margin-bottom: 3%;margin-top: 1%;
+	display: block;
+    margin-left: auto;
+    margin-right: auto;
+}

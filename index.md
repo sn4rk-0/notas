@@ -12,7 +12,7 @@ title: Bienvenidos a mi blog
 #### ¡ gracias por su tiempo ! 
 
 
- ¡Cualquier comentario/recomendación, **contáctame**!
+ ¡Cualquier comentario/recomendación, **~~contáctame~~** !
 
 
 

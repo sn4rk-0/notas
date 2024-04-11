@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Comandos básicos
-date: 2024-03-28 16:28:23 +0900
+date: 2024-03-28 16:28:23
 category: sample
 vm: linux
 ---
