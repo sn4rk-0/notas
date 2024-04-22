@@ -228,4 +228,4 @@ _- Obtenemos la conexión a la máquina:_
 
 <br>
 
-##### **_finalizado._**
+<span class="finish">_Finalizado._</span>

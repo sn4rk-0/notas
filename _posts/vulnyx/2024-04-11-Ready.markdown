@@ -181,4 +181,4 @@ vm: vulnyx
 
 <br>
 
-##### **_finalizado._**
+<span class="finish">_Finalizado._</span>

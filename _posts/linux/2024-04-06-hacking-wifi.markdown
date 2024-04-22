@@ -12,7 +12,6 @@ vm: linux
 ```
 ![iwconfig](/notas/public/img/hwifi/iwconfig.png)
 
-<br>
 
 ### **2)** Le cambiamos el ESSID para no complicarnos
 ```
@@ -22,8 +21,6 @@ vm: linux
 ```
  ![essid](/notas/public/img/hwifi/essid_modify.png)
 
-<br>
-
 ### **3)** Eliminamos procesos 'conflictivos'
 ```
     sudo airmon-ng check kill
@@ -31,7 +28,6 @@ vm: linux
 ![kill](/notas/public/img/hwifi/kill_process.png)
 
 
-<br>
 
 ### **4)** Iniciamos el modo monitor
 ```
@@ -41,7 +37,6 @@ vm: linux
 
 _> El nombre de nuestra interface puede variar, en este caso se mantiene._
 
-<br>
 
 ### **5)** Escuchamos los Puntos de Acceso (AP)
 ```
@@ -54,7 +49,6 @@ _> El nombre de nuestra interface puede variar, en este caso se mantiene._
     - **11** - Canal 
 
 
-<br>
 
 ### **6)** Vemos los dispositivos del AP objetivo
 ```
@@ -66,7 +60,6 @@ _En este caso hay un dispositivo movil conectado._
 
 - **44:6D:6C:35:40:DB** - Mac del Dispositivo dentro del AP Mi_Wifi
 
-<br>
 
 ### **7)** Desautenticamos al usuario del punto de acceso
 ```
@@ -84,7 +77,6 @@ _Tenemos el handshake, donde viaja 'la contraseña cifrada'_
 
 ![cap](/notas/public/img/hwifi/save_cap.png)
 
-<br>
 
 ### **8)** Aplicamos fuerza bruta para obtener la contraseña
 ```
@@ -92,3 +84,6 @@ _Tenemos el handshake, donde viaja 'la contraseña cifrada'_
 ```
 ![key](/notas/public/img/hwifi/key.png)
 
+<br>
+
+<span class="finish">_Finalizado._</span>

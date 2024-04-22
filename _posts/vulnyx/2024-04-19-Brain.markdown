@@ -131,4 +131,4 @@ _\- buscando en la web [gtfobins](https://gtfobins.github.io/#wfuzz) no encontra
 
 <br>
 
-##### **_finalizado._**
+<span class="finish">_Finalizado._</span>

