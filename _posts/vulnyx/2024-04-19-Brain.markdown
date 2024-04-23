@@ -25,7 +25,7 @@ vm: vulnyx
 
 <br>
 
-![serve](/notas/public/img/vulnyx/brain/host.png){:.margin}{:.margin}
+![serve](/notas/public/img/vulnyx/brain/host.png){:.margin}
 
 **1\.** Verificamos dispositivos en la red.
 
