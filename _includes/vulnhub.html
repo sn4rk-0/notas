@@ -1,13 +1,13 @@
 <article class="post">
   <header class="post-header home">
-    <div class="post-title">Vulnyx Easy</div>
+    <div class="post-title">Vulnhub Easy</div>
   </header>
 
   <div class="post-content">
     {%- if site.posts.size > 0 -%}
     <ul class="post-list">
       {%- for post in site.posts -%}
-      {% if post.vm == "vulnyx" %}
+      {% if post.vm == "vulnhub" %}
       <li class="post-list-item">
         {%- assign date_format = "%Y/%m/%d" -%}
         <span class="post-date">{{ post.date | date: date_format }}</span>

