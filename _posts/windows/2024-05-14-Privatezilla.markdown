@@ -45,6 +45,8 @@ vm: windows
 
 ![](/notas/public/img/privatezilla/aplicar.png){:.margin}
 
+_Listo._
+
 ---
 
 ### Revertir cambios.
@@ -65,4 +67,4 @@ _\- Si indica "no configurado" es que antes no le hicimos ningun cambios._
 
 <br>
 
-_Done, thanks :)_
+_Listo._

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Comandos Básicos Windows
+title: Comandos Básicos
 date: 2024-03-28 18:10:23
 category: sample
 vm: windows
