@@ -20,7 +20,7 @@ vm: vulnhub
   <tr> <td><strong>Máquina:</strong> Deathnote </td> </tr>
   <tr> <td><strong>SO:</strong> Linux</td> </tr>
   <tr> <td><strong>Dificultad:</strong> <span class="easy">Easy</span></td> </tr>
-  <tr> <td><strong><a href="https://www.vulnhub.com/entry/deathnote-1,739/"> Descarga</a></strong></td> </tr>
+  <tr> <td><strong><a href="https://www.vulnhub.com/entry/deathnote-1,739/" target="_blank"> Descarga</a></strong></td> </tr>
 </table>
 
 <br>

