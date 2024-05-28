@@ -1,0 +1,117 @@
+---
+layout: post
+title: "Vegeta"
+date: 2024-05-28 13:25:23
+category: sample
+vm: vulnhub
+---
+
+<style>
+  .post-content {
+    color: #51c25be1; /* Cambia el color del texto */
+  }
+</style>
+
+<table class="log">
+  <tr>
+    <td rowspan="5"><img src="/notas/public/img/vulnhub/vulnhub.png" width=260></td>
+    <td></td>
+  </tr>
+  <tr> <td><strong>Máquina:</strong> Vegeta </td> </tr>
+  <tr> <td><strong>SO:</strong> Linux</td> </tr>
+  <tr> <td><strong>Dificultad:</strong> <span class="easy">Easy</span></td> </tr>
+  <tr> <td><strong><a href="https://www.vulnhub.com/entry/vegeta-1,501/" target="_blank"> Descarga</a></strong></td> </tr>
+</table>
+
+<br>
+
+![img](/notas/public/img/vulnhub/Vegeta/host.png){:.margin}
+
+**1\.** Escaneo dispositivos en la red.
+
+`sudo arp-scan -I enp2s0 --localnet`
+
+![img](/notas/public/img/vulnhub/Vegeta/arp.png){:.margin}
+
+**2\.** Escaneo de puertos y servicios en la maquina.
+
+`sudo nmap -p- --open -T5 -sCV --mi-rate=5000 -Pn -n 192.168.1.7`
+
+![img](/notas/public/img/vulnhub/Vegeta/nmap.png){:.margin}
+
+**3\.** Visito la web que corre apache; no encuentro nada util.
+
+`http://192.168.1.7:80`
+
+![img](/notas/public/img/vulnhub/Vegeta/80.png){:.margin}
+
+**4\.** Fuzzing de recursos en la web.
+
+`gobuster dir -u http://192.168.1.7/ -w /usr/share/secclists/Discovery/Web-Content/directory-list-2.3-medium.txt -x txt,php,html -q` 
+
+![img](/notas/public/img/vulnhub/Vegeta/gobuster.png){:.margin}
+
+**5\.** En robots encuentro un posible directorio.
+
+`http://192.168.1.7/robots.txt`
+
+![img](/notas/public/img/vulnhub/Vegeta/robots.png){:.margin}
+
+**6\.** Investigando la nueva ruta encontrada.
+
+_6.1- Encuentro un archivo html_
+
+`http://192.168.1.7/find_me/`
+
+![img](/notas/public/img/vulnhub/Vegeta/findme.png){:.margin}
+
+_6.2- Veo un nombre, pero si revisamos el codigo fuente por debajo veo un texto
+
+`http://192.168.1.7/find_me/find_me.html`
+
+![img](/notas/public/img/vulnhub/Vegeta/findmehtml.png){:.margin}
+![img](/notas/public/img/vulnhub/Vegeta/findmehtmlcod.png){:.margin}
+
+_6.3- Lo paso por [Cyberchef]() por base64(x2), veo que es un png y lo guardo, se trata de un qr_
+
+![img](/notas/public/img/vulnhub/Vegeta/cyberchef.png){:.margin}
+![img](/notas/public/img/vulnhub/Vegeta/qr.png){:.margin}
+
+**7\.** Uso [ZXing](https://zxing.org/w/decode.jspx) para decodificar el qr; obtengo una contraseña.
+
+![img](/notas/public/img/vulnhub/Vegeta/zxing.png){:.margin}
+![img](/notas/public/img/vulnhub/Vegeta/zxingdecode.png){:.margin}
+
+**8\.** En otra ruta encuentro un audio, lo decodifico con [morsecode](https://morsecode.world/international/decoder/audio-decoder-adaptive.html).
+
+`http://192.168.1.7/bulma/`
+
+![img](/notas/public/img/vulnhub/Vegeta/bulma.png){:.margin}
+![img](/notas/public/img/vulnhub/Vegeta/morsecode.png){:.margin}
+
+**9\.** Con estos datos accedo por ssh.
+
+`ssh trunks@192.168.1.7`
+
+![img](/notas/public/img/vulnhub/Vegeta/sshtrunks.png){:.margin}
+
+**10\.** Revisando el bash_history veo que puedo agregar a Tom al passwd ya que tengo permisos de escritura.
+
+`ls -a`
+
+`cat .bash_history`
+
+`ls -l /etc/passwd`
+
+![img](/notas/public/img/vulnhub/Vegeta/bashpasswd.png){:.margin}
+![img](/notas/public/img/vulnhub/Vegeta/tompasswd.png){:.margin}
+
+**11\.** Escalando a root, usamos la contraseña Password@973.
+
+`su Tom`
+
+![img](/notas/public/img/vulnhub/Vegeta/root.png){:.margin}
+
+<br>
+
+<span class="finish">_Finalizado._</span>
