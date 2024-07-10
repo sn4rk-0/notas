@@ -2,7 +2,7 @@
 layout: post
 title: "Printer"
 date: 2024-04-30 13:20:23
-category: sample
+category: Vulnyx
 vm: vulnyx
 ---
 

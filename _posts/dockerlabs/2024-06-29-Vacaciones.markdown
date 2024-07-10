@@ -2,7 +2,7 @@
 layout: post
 title: "Vacaciones"
 date: 2024-06-29 12:20:23
-category: sample
+category: dockerlabs
 vm: dockerlabs
 ---
 

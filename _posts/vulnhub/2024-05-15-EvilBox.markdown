@@ -2,7 +2,7 @@
 layout: post
 title: "EvilBox"
 date: 2024-05-15 17:35:23
-category: sample
+category: vulnhub
 vm: vulnhub
 ---
 

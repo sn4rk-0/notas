@@ -2,7 +2,7 @@
 layout: post
 title: "Injection"
 date: 2024-07-01 11:05:23
-category: sample
+category: dockerlabs
 vm: dockerlabs
 ---
 

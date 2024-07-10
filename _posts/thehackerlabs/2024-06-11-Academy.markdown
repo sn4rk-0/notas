@@ -2,7 +2,7 @@
 layout: post
 title: "Academy"
 date: 2024-06-11 16:25:23
-category: sample
+category: hackerlabs
 vm: hackerlabs
 ---
 

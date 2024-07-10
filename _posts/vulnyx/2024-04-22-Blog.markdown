@@ -2,7 +2,7 @@
 layout: post
 title: "Blog"
 date: 2024-04-22 11:55:23
-category: sample
+category: Vulnyx
 vm: vulnyx
 ---
 

@@ -2,7 +2,7 @@
 layout: post
 title: "Grillo"
 date: 2024-06-06 11:35:23
-category: sample
+category: hackerlabs
 vm: hackerlabs
 ---
 

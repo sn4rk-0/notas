@@ -2,7 +2,7 @@
 layout: post
 title: "Zapas Guapas"
 date: 2024-06-07 15:20:23
-category: sample
+category: hackerlabs
 vm: hackerlabs
 ---
 

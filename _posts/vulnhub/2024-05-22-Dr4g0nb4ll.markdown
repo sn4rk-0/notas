@@ -2,7 +2,7 @@
 layout: post
 title: "Dr4g0n b4ll"
 date: 2024-05-22 13:25:23
-category: sample
+category: vulnhub
 vm: vulnhub
 ---
 

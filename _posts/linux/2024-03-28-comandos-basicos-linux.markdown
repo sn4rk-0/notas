@@ -2,7 +2,7 @@
 layout: post
 title: Comandos básicos
 date: 2024-03-28 16:28:23
-category: sample
+category: Linux
 vm: linux
 ---
 |Comando |Función|
@@ -61,4 +61,6 @@ vm: linux
 |_**groupadd** group_ | agregar o crear nuevo grupo|
 |_**usermod -a -G** group user_ | añadir al grupo a un usuario|
 
-_próxima actualización de contenido ...._
+<br>
+
+<a href="#">_próxima actualización de contenido ...._</a>

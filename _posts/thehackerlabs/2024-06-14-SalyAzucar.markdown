@@ -2,7 +2,7 @@
 layout: post
 title: "Sal y Azucar"
 date: 2024-06-14 10:55:23
-category: sample
+category: hackerlabs
 vm: hackerlabs
 ---
 

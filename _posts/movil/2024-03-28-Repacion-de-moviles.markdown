@@ -2,7 +2,7 @@
 layout: post
 title: Reparación de Móviles
 date: 2024-03-28 18:11:23
-category: sample
+category: Movil
 vm: movil
 ---
 ## 1. Herramientas
@@ -231,4 +231,6 @@ _* Medición de capacitores_
 	A diferencia de capacitores o resistencia; normalmente son mas grandesitas.
 	Si continuidad.
 
-_próxima actualización de contenido ...._
+<br>
+
+<a href="#">_próxima actualización de contenido ...._</a>

@@ -2,7 +2,7 @@
 layout: post
 title: Comandos Básicos
 date: 2024-03-28 18:10:23
-category: sample
+category: Windows
 vm: windows
 ---
 |Comando|Función|
@@ -28,4 +28,6 @@ vm: windows
 |_**shutdown**_ | apagar el ordenador|
 |_**logoff**_ |cerrar session|
 
-_próxima actualización de contenido ...._
+<br>
+
+<a href="#">_próxima actualización de contenido ...._</a>

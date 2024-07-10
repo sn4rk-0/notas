@@ -2,7 +2,7 @@
 layout: post
 title: "Fruits"
 date: 2024-06-03 13:05:23
-category: sample
+category: hackerlabs
 vm: hackerlabs
 ---
 

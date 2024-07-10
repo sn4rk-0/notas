@@ -2,7 +2,7 @@
 layout: post
 title: "Mortadela"
 date: 2024-06-06 18:10:23
-category: sample
+category: hackerlabs
 vm: hackerlabs
 ---
 

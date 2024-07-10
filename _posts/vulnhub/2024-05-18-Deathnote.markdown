@@ -2,7 +2,7 @@
 layout: post
 title: "Deathnote"
 date: 2024-05-18 10:37:23
-category: sample
+category: vulnhub
 vm: vulnhub
 ---
 

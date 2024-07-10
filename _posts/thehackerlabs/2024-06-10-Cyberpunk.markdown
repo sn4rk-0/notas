@@ -2,7 +2,7 @@
 layout: post
 title: "Cyberpunk"
 date: 2024-06-10 14:05:23
-category: sample
+category: hackerlabs
 vm: hackerlabs
 ---
 

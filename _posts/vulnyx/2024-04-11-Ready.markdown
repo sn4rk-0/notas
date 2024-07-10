@@ -2,7 +2,7 @@
 layout: post
 title:  "Ready"
 date:   2024-04-11 11:37:29
-categories: sample
+categories: Vulnyx
 vm: vulnyx
 ---
 

@@ -2,7 +2,7 @@
 layout: post
 title: Privatezilla
 date: 2024-05-14 19:47:23
-category: sample
+category: Windows
 vm: windows
 ---
 
@@ -67,4 +67,4 @@ _\- Si indica "no configurado" es que antes no le hicimos ningun cambios._
 
 <br>
 
-_Listo._
+<a href="#">_Finalizado._</a>

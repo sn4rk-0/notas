@@ -2,7 +2,7 @@
 layout: post
 title: Markdown Sintaxis
 date: 2024-04-01 15:10:23 
-category: sample
+category: Obsidian
 vm: obsidian
 ---
 ### 1) Formatos de texto 
@@ -216,4 +216,6 @@ ___texto negrita y cursiva 2___
 ![image1](/notas/public/img/obsidian/image1.png)
 ![image2](/notas/public/img/obsidian/image2.png)
 
-_próxima actualización de contenido ...._
+<br>
+
+<a href="#">_próxima actualización de contenido ...._</a>

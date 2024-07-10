@@ -2,7 +2,7 @@
 layout: post
 title: "Goiko"
 date: 2024-06-22 11:55:23
-category: sample
+category: hackerlabs
 vm: hackerlabs
 ---
 

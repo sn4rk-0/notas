@@ -2,7 +2,7 @@
 layout: post
 title: "Decryptor"
 date: 2024-06-21 11:15:23
-category: sample
+category: hackerlabs
 vm: hackerlabs
 ---
 
