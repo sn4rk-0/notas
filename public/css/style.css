@@ -347,7 +347,7 @@ footer {
 /* more styles */
 table{width: 100%;}
 th{color: #00ACEE; font-size: 20px;}
-th,td {border-bottom: 1px solid rgba(201, 201, 201, 0.329) ;}
+th,td {border-bottom: 1px solid rgba(201, 201, 201, 0.212) ;}
 table td:nth-child(1) {
     color: rgba(172, 172, 172, 0.808); 
 }
