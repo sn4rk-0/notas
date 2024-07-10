@@ -6,12 +6,6 @@ category: sample
 vm: vulnhub
 ---
 
-<style>
-  .post-content {
-    color: #51c25be1; /* Cambia el color del texto */
-  }
-</style>
-
 <table class="log">
   <tr>
     <td rowspan="5"><img src="/notas/public/img/vulnhub/vulnhub.png" width=260></td>
@@ -237,4 +231,4 @@ _20.2- Ya que tengo permiso general, accedo como root_
 
 <br>
 
-<span class="finish">_Finalizado._</span>
+<a href="#">_Finalizado._</a>

@@ -6,12 +6,6 @@ category: sample
 vm: hackerlabs
 ---
 
-<style>
-  .post-content {
-    color: #51c25be1; /* Cambia el color del texto */
-  }
-</style>
-
 <table class="log">
   <tr>
     <td rowspan="5"><img src="/notas/public/img/thehackerlabs/thehackerlabs.png" width=260></td>
@@ -145,4 +139,4 @@ _10.2- Veo que el script importa una libreria, pero no especifica la ruta de lla
 
 <br>
 
-<span class="finish">_Finalizado._</span>
+<a href="#">_Finalizado._</a>
