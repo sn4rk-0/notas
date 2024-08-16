@@ -13,7 +13,7 @@ vm: dockerlabs
   </tr>
   <tr> <td><strong>Máquina:</strong> Obsession </td> </tr>
   <tr> <td><strong>SO:</strong> Linux</td> </tr>
-  <tr> <td><strong>Nivel:</strong> <span class="easy">Muy Facil</span></td> </tr>
+  <tr> <td><strong>Nivel:</strong> <span class="reeasy">Muy Facil</span></td> </tr>
   <tr> <td><strong><a href="https://dockerlabs.es" target="_blank"> DockerLabs</a></strong></td> </tr>
 </table>
 
