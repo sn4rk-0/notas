@@ -1,236 +1,238 @@
 ---
 layout: post
 title: Reparación de Móviles
-date: 2024-03-28 18:11:23
+date: 2025-02-11 18:40:23
 category: Movil
 vm: movil
 ---
+
 ## 1. Herramientas
+
 ### 1.1. Herramientas de diagnóstico
 
-- Multímetro o tester ()
-- Fuente de alimentación ()
-- usbTester ()
-- Cámara térmica ()
-	- Localizador de fallas o Removedor de partículas 
-- Microscopio ()
-	- Lupa
+- **Multímetro o tester** :&nbsp;&nbsp;&nbsp; Para realizar mediciones de componentes electronicos.
 
-###  1.2. Herramientas de desarme y armado
+<img src="/notas/public/img/repamovil/tester.png" width="350" height="300">{:.margin}
 
-- Destornilladores de precisión ()
-- Púas plásticas y espátulas de desarme ()
-- Plancha separadora o de calor ()
-	- Pistola de calor ()
-- Ventosa ()
+- **Fuente de alimentación** :&nbsp;&nbsp;&nbsp; Reemplaza a la bateria usado para medir el consumo.
 
+<img src="/notas/public/img/repamovil/fuente.png" width="350" height="300">{:.margin}
+
+- **usbTester** :&nbsp;&nbsp;&nbsp; Intermediario entre el dispositivo y el cargador, para medir el consumo.
+
+<img src="/notas/public/img/repamovil/usbtest.png" width="350" height="300">{:.margin}
+
+- **Cámara térmica** :&nbsp;&nbsp;&nbsp; Detecta cambios de calor o temperatura en un componente.
+
+<img src="/notas/public/img/repamovil/camaratermica.jpg" width="350" height="300">{:.margin}
+
+- **Localizador de fallas o Removedor de partículas**
+
+<img src="/notas/public/img/repamovil/localizador.png" width="350" height="300">{:.margin}
+
+- **Microscopio** :&nbsp;&nbsp;&nbsp; Recomendado los de tipo analogico en binocular o trinocular.
+
+<img src="/notas/public/img/repamovil/trinocular.jpg" width="350" height="300">{:.margin}
+
+- **Lupas**
+
+<img src="/notas/public/img/repamovil/lupa.png" width="350" height="300">{:.margin}
+
+  
+
+### 1.2. Herramientas de desarme y armado
+
+  - **Destornilladores de precisión** :&nbsp;&nbsp;&nbsp; No se recomienda desarmadores en Kits, son de mala calidad y demasiados de los cuales se usa muy pocas.
+
+<img src="/notas/public/img/repamovil/destornillador.png" width="350" height="300">{:.margin}
+
+- **Púas plásticas y espátulas de desarme** :&nbsp;&nbsp;&nbsp; Para sacar las carcasas o tapas sin dañar.
+
+<img src="/notas/public/img/repamovil/puas.jpg" width="350" height="300">{:.margin}
+
+- **Plancha separadora o de calor** :&nbsp;&nbsp;&nbsp; Para suavizar el pegamento en las pantallas y tapas.
+
+<img src="/notas/public/img/repamovil/plancha.png" width="350" height="300">{:.margin}
+
+- **Pistola de calor**
+
+<img src="/notas/public/img/repamovil/pistola.png" width="350" height="300">{:.margin}
+
+- **Espatulas metalicas** :&nbsp;&nbsp;&nbsp; De gran flexibilidad para sacar pantallas sin dañar.
+
+<img src="/notas/public/img/repamovil/espatulametalica.png" width="350" height="300">{:.margin}
+
+  
 ### 1.3. Herramientas para soldadura
 
-- Estación de soldadura ()
-	- Cautín o soldador ()
-- Estaño ()
-- Flux ()
-- Malla desoldante ()
-	- Succionador de estaño ()
-- Cinta metálica y/o Kapton ()
-- Pinzas bruselas
-- Holder ()
+- **Estación de soldadura** :&nbsp;&nbsp;&nbsp; Pueden ser las duales que traen cautin y pistola de calor.
 
+<img src="/notas/public/img/repamovil/estacion.jpg" width="350" height="300">{:.margin}
+
+- **Cautín o soldador** :&nbsp;&nbsp;&nbsp; Recomendado de punta ceramica
+
+<img src="/notas/public/img/repamovil/cautin.png" width="350" height="300">{:.margin}
+
+- **Estaño** :&nbsp;&nbsp;&nbsp; De tipo alambre o pasta, se recomienda de buena calidad.
+
+<img src="/notas/public/img/repamovil/pasta.jpg" width="350" height="300">{:.margin}
+
+- **Flux** :&nbsp;&nbsp;&nbsp; Ayuda a derretir y remover el estaño viejo.
+
+<img src="/notas/public/img/repamovil/flux.png" width="350" height="300">{:.margin}
+
+- **Malla desoldante** :&nbsp;&nbsp;&nbsp; Absorbe el estaño de los componentes.
+
+<img src="/notas/public/img/repamovil/malla.jpeg" width="350" height="300">{:.margin}
+
+- **Succionador de estaño**
+
+<img src="/notas/public/img/repamovil/succionador.jpg" width="350" height="300">{:.margin}
+
+- **Cinta metálica y/o Kapton** :&nbsp;&nbsp;&nbsp; Soporta altas temperaturas se usa para cubrir componentes y evitar daños.
+
+<img src="/notas/public/img/repamovil/cinta.jpeg" width="350" height="300">{:.margin}
+
+- **Pinzas bruselas** :&nbsp;&nbsp;&nbsp; Pinzas de presicion para manipular componentes pequeños.
+
+<img src="/notas/public/img/repamovil/pinzas.jpg" width="350" height="300">{:.margin}
+
+- **Holder** :&nbsp;&nbsp;&nbsp; Soporte seguro de componentes.
+
+<img src="/notas/public/img/repamovil/holder.png" width="350" height="300">{:.margin}
+
+  
 ### 1.4. Herramientas de limpieza
 
-- Batea de ultrasonido ()
-	- Alcohol isopropílico ()
-	- WD-40 ()
-	- Bencina
-- Removedor de flux ()
-- Cepillo y/o Hisopos
+- **Batea de ultrasonido**
 
+<img src="/notas/public/img/repamovil/batea.jpg" width="350" height="300">{:.margin}
+
+- **Alcohol isopropílico**
+
+<img src="/notas/public/img/repamovil/alcohol.jpg" width="350" height="300">{:.margin}
+
+- **WD-40**
+
+<img src="/notas/public/img/repamovil/wd40.jpg" width="350" height="300">{:.margin}
+
+- **Bencina**
+
+<img src="/notas/public/img/repamovil/bencina.png" width="350" height="300">{:.margin}
+
+- **Removedor de flux**
+
+<img src="/notas/public/img/repamovil/removedor.jpg" width="350" height="300">{:.margin}
+
+- **Cepillo y/o Hisopos**
+
+<img src="/notas/public/img/repamovil/isopo.jpg" width="350" height="300">{:.margin}
+
+  
 ### 1.5. Herramientas de seguridad anti-estática
 
-- Pulsera antiestática ()
-	- Guantes antiestáticos ()
-- Manta de trabajo antiestática
+- **Pulsera antiestática**
+
+<img src="/notas/public/img/repamovil/pulsera.png" width="350" height="300">{:.margin}
+
+- **Guantes antiestáticos**
+
+<img src="/notas/public/img/repamovil/guantes.png" width="350" height="300">{:.margin}
+
+- **Manta de trabajo antiestática**
+
+<img src="/notas/public/img/repamovil/manta.jpg" width="350" height="300">{:.margin}
+ 
 
 ### 1.6. Herramientas complementarias
 
-- Alicate de precisión ()
-- Pegamento para pantallas ()
-- Pinzas sujetadoras y/o morsas ()
-- Recipientes herméticos y/o táper ()
+- **Alicate de precisión**
 
----
+<img src="/notas/public/img/repamovil/alicate.jpg" width="350" height="300">{:.margin}
 
-## 2. Conceptos de electrónica básica
+- **Pegamento para pantallas**
 
-### 2.1. Tensión, Corriente y Resistencia
+<img src="/notas/public/img/repamovil/pegamento.jpeg" width="350" height="300">{:.margin}
 
- _* Tensión o Voltage_
+- **Pinzas sujetadoras y/o morsas**
 
-	unidad de medida: V (voltio)
-	Fuerza que se ejerce sobre los electrones para que se muevan.
-	Mayor fuerza mas voltage
+<img src="/notas/public/img/repamovil/pinzas.png" width="350" height="300">{:.margin}
 
-	Bateria
-	+V +A
+- **Recipientes herméticos y/o táper**
 
- _* Corriente_
+<img src="/notas/public/img/repamovil/taper.jpg" width="350" height="300">{:.margin}
 
-	Cantidad de electrones que estan circulando en un circuito.
-	unidad de medida: A (ampere)
+<br>
+<br>
 
- _* Resistencia_
-
-	Opocision al paso de la corriente o electrones
-	unidad de medida: Ω (ohmio)
-
-	+R -A
-
-### 2.2. Corriente Alterna y Corriente Continua
-
-Corriente alterna **AC** (~)
-
-	El curso de los electrones cambia de sentido todo el tiempo.
-	No tiene polaridad
-
-Corriente continua **DC/CC** (-)
-
-	Los electrones siempre van en una misma direccion.
-	Tiene polaridad
-
-### 2.3. Multiplicadores y Divisores
-
-|prefijo |Simbolo |Valor |Equivalencia en unidades|
-|-------|---------|------|------------------------|
-|exa    |E        |1x10(18)|trillón               |
-|peta   |P        |1x10(15)|mil billones          |
-|tera   |T        |1x10(12)|billón                |
-|giga   |G        |1x10(9) |mil millones          |
-|mega   |M        |1x10(6) |millón                |
-|**kilo**   |k        |1x10(3) |mil                   |
-|hecto  |h        |1x10(2) |cien                  |
-|deca   |da       |1x10    |diez                  |
-|**unidad** |**1**        |**1**       |**uno**                   |
-|deci   |d        |1x10(-1)|décima                |
-|centi  |c        |1x10(-2)|centésima             |
-|**mili**   |m        |1x10(-3)|milésima              |
-|       |         |1x10(-6)|millonésima           |
-|       |         |1x10(-9)|mil millonésima       |
-
-_Ejemplo:_
-
-	1A = 1 mA (miliAmpere)
-	
-	0,550 -> 550 mA
-	1,25  -> 1250 mA
-	
-### 2.4. Serie y Paralelo
-
-#### Serie
-Uno al lado del otro
-
-_Ejemplo:_
-
-	Tenemos 3 leds cada uno necesita 2v y consumen 3mA
-		-> Voltage necesario para encenderlos: 
-			2v+2v+2v = 6V    se suman
-			3mA
-	Potencia usado 6V*3mA=18
-
-#### Paralelo
-	cada conexión es independiente
-
-_Ejemplo:_
-
-	Tenemos 3 leds cada uno necesita 2V y consumen 3mA
-		-> voltage necesario para encenderlos:
-			2V
-			3mA+3mA+3mA = 9mA   se suman
-	Potencia usado 2V*9mA=18
-
-##### Mediciones comunes en móviles
-- voltages V
-- ohmios Ω
-- continuidad _
-- diodos -▶\|-
-
-### 2.5. Cortocircuitos
-
-#### Circuito abierto
-	Cuando el circuito esta abierto no funciona  Ejp:un cable cortado
-
-#### Circuito cerrado
-	Cuando el circuito esta cerrado si funciona
-
-#### Cortocircuito
-	Ocurre cuando Positivo y Negativo se unen sin ninguna resistencia en el medio.
-	Ocurre una avalancha de electrones en ese punto que producen una disipacion colorica mayor.
-
-### 2.6 Utilización del Tester
-
-	⏚  Cable Negro (COM)
-	Ω  Cable Rojo  (mA)
-
-**Uno siempre debe elegir la escala inmediatamente superior a la que quiere medir**
-
-	Medicion de tension en las Baterias.
-	cargadas al 100% entregan 4.2V  4.3V
-	En el tester elegir la escale superior a ello ej 20V
-
----
-
-## 3. Componentes electrónicos
-
-#### Tipos de componentes electrones según su soldadura
-##### THT (tecnología de agujeros pasantes)
-	Los contactos de los componentes estan soldados pasando la placa
-
-##### SMT o SMD (Tecnología de montaje superficial)
-	Tienen contactos para ser soldados de manera superficial sobre la placa
-
-### 3.1. Resistencias R
-
-	Componentes que se oponen al paso de la corriente.
-	
-	No tienen polaridad
-	No continuidad
-	En general los smd son de color negro con extremos plateados.
-
-_* Medición de resistencia_
-
-- Colocamos la perilla del tester en la parte del simbolo Ω
-- Colocamos cada punta en cada extremo del resistor.
-- Probar con la escala menor _(si marca 1 o 0 ir subiendo de escala)_
-	- si ya llegamos a las escalas de k, multiplicar el valor que nos da por mil
-
-### 3.2. Condensadores C
-
-	Son como pequeñas baterias, capaces de almacenar cierta energia.
-	Logra estabilizar la linea ante fluctuaciones. Absorve y/o suelta energia.
-	casi todos los capacitores estan conectadas en paralelo.(Contacto en + el otro en -).
-	
-	No continuidad.
-	No tiene polaridad
-	En general los capacitores son color Marron(Mas claro o Oscuro) y/o grises.
-
-_* Medición de capacitores_
-- Colocamos el Tester en escala de Continuidad.
-- Colocamos cada punta en cada extremos del capacitor.
-	- No debe de haber continuidad (Sonido).
-- Otra Forma de medir es colocar cualquier punta a tierra (Chapa).
-	- Con la otra punta medimos cada extremo del capacitor.
-		- En un extremo debe de haber continuidad(Sonido/Conexión a tierra) y en la otra no.
-
-### 3.3. Bobinas L
-
-	Cable enrollado en un nucleo aislado entre si.
-	Capaz de cargarse pero con muy poca energia(electromagnetico).
-		-A falta de corriente es capaz de elevar la tension.
-		-A excesivo corriente es capaz de bajar la tension.
-	Por lo general usados en serie y en linea positivo.
-	
-	A diferencia de capacitores o resistencia; normalmente son mas grandesitas.
-	Si continuidad.
+## 2. Conceptos de Electrónica Básica
 
 <br>
 
-<a href="#">_próxima actualización de contenido ...._</a>
+  \* Tensión     * Corriente    * Resistencia
+
+>	Ley de OHM, si tienes mas Voltage vas a conseguir mayor corriente o amper A.
+       Si la Resistencia sube, disminuye la corriente A.
+
+<img src="/notas/public/img/repamovil/ley.jpg" width="350" height="300">{:.margin}
+
+- **Tensión o Voltage (V)**
+
+> La tension es la fuerza que se ejerce sobre los electrones, estos no se mueven si alguien no los empuja.
+
+- **Corriente o Amper (A)**
+
+> Es la cantidad de electrones que circulan en un punto y momento especifico. 
+
+- **Resistencia (Ω ohmio)**
+
+> Es la oposicion de la corriente o electrones.
+
+_**Ejplo**: Si un cable es muy fino este va a dejar pasar menos electrones o corriente, entonces tiene mas resistencia._
+
+<br><br>
+
+\* Corriente Alterna     * Corriente Continua
+
+- **Corriente alterna - AC** (~)
+
+> Es una corriente que cambia de sentido todo el tiempo, los electrones van y vienen alternando el sentido, y no tiene polaridad (positivo y negativo).
+
+- **Corriente continua - DC/CC** (-)
+
+> Siempre van en una sola direccion y tiene polaridad.
+
+### 2.3. Multiplicadores y Divisores
+
+| prefijo    | Simbolo | Valor    | Equivalencia en unidades |
+| ---------- | ------- | -------- | ------------------------ |
+| exa        | E       | 1x10(18) | trillón                  |
+| peta       | P       | 1x10(15) | mil billones             |
+| tera       | T       | 1x10(12) | billón                   |
+| giga       | G       | 1x10(9)  | mil millones             |
+| mega       | M       | 1x10(6)  | millón                   |
+| **kilo**   | k       | 1x10(3)  | mil                      |
+| hecto      | h       | 1x10(2)  | cien                     |
+| deca       | da      | 1x10     | diez                     |
+| **unidad** | **1**   | **1**    | **uno**                  |
+| deci       | d       | 1x10(-1) | décima                   |
+| centi      | c       | 1x10(-2) | centésima                |
+| **mili**   | m       | 1x10(-3) | milésima                 |
+|            |         | 1x10(-6) | millonésima              |
+|            |         | 1x10(-9) | mil millonésima          |
+
+
+_Ejemplo:_
+
+Resistencia de 10**k**  :&nbsp;&nbsp;&nbsp;  10x1000  = Resistencia de 10000 Ω Ohm
+
+Si la fuente indica consumo de:
+
+	0,550 = serian 550 mA
+    0,050 = 50 mA
+    1,25 = 1250 mA
+
+
+<br>
+
+<a href="#">_Actualizacion en breve...._</a>
