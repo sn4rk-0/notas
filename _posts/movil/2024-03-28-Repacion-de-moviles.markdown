@@ -173,7 +173,6 @@ vm: movil
 
 >	Ley de OHM, si tienes mas Voltage vas a conseguir mayor corriente o amper A.
        Si la Resistencia sube, disminuye la corriente A.
-
 <img src="/notas/public/img/repamovil/ley.jpg" width="350" height="300">{:.margin}
 
 - **Tensión o Voltage (V)**
@@ -202,7 +201,9 @@ _**Ejplo**: Si un cable es muy fino este va a dejar pasar menos electrones o cor
 
 > Siempre van en una sola direccion y tiene polaridad.
 
-### 2.3. Multiplicadores y Divisores
+<br>
+
+#### .Multiplicadores y Divisores
 
 | prefijo    | Simbolo | Valor    | Equivalencia en unidades |
 | ---------- | ------- | -------- | ------------------------ |
@@ -231,6 +232,37 @@ Si la fuente indica consumo de:
 	0,550 = serian 550 mA
     0,050 = 50 mA
     1,25 = 1250 mA
+
+<br>
+
+\* Serie    * Paralelo
+
+- **Serie**
+
+> Todos los componentes estan en la misma linea, si tenemos 2 leds y cada uno necesita 2v y 3mA para funcionar, en total este circuito necesita la suma de los voltios  y la corriente se mantiene o el consumo siempre es el mismo.
+<img src="/notas/public/img/repamovil/serie.png" width="350" height="300">{:.margin}
+
+- **Paralelo**
+
+> Cada conexion es independiente, cada componente coge cada linea de manera independiente, si tenemos 2 leds y cada uno necesita 2v y 3mA; aqui el voltaje siempre es el mismo y la corriente se suma.
+<img src="/notas/public/img/repamovil/paralelo.png" width="350" height="300">{:.margin}
+  
+<br>
+
+\* Circuito abierto       * Circuito cerrado    * Cortocircuito 
+
+- **Circuito abierto**
+> Cuando el circuito esta abierto no funciona Ejplo: Un cable cortado.
+<img src="/notas/public/img/repamovil/abierto.png" width="350" height="300">{:.margin}
+  
+- **Circuito cerrado**
+> Cuando el circuito esta cerrado si funciona, los electrones completan su recorrido.
+<img src="/notas/public/img/repamovil/cerrado.png" width="350" height="300">{:.margin}
+
+- **Cortocircuito**
+
+> Es cuando + y - se unen sin ninguna resistencia en medio, los electrones hacen el circuito mas corto, esto provoca una abalancha que produce una disipacion calorica mayor.
+<img src="/notas/public/img/repamovil/corto.png" width="350" height="300">{:.margin}
 
 
 <br>
